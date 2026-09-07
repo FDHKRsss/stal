@@ -246,4 +246,18 @@ add/update/remove/merge/validation, and a full route flow
   `test_tampered_session_cookie_behaves_like_an_empty_cart`, `test_wrong_http_method_returns_405`)
   and `tests/test_cart.py` the real cart suite (both wired through the Flask test client); the
   plan, "What's in code" and the plan-state tests now record M9 -- real as delivered.
+- 2026-09-07 (architect): **M8 -- real still not delivered this round** — the coder reported green, but
+  `git status` shows only `docs/lessons/patterns.md` changed. `stal/static/style.css` is still the bare
+  stub stylesheet (its header comment still says "stub pass" and it styles only the header/nav/flash/
+  footer shell, not the `product-grid`/`product-card`, `cart-lines`, `checkout-form`, `order-lines` or
+  `demo-note` classes the templates already emit) and `tests/test_styling_stub.py` still pins the stub
+  (there is no `tests/test_styling.py`). The 281 green tests are the *stub* suite, not M8 -- real, so it
+  stays parked. To actually deliver it, the coder must land ONE commit that: (1) rewrites
+  `stal/static/style.css` into a real, presentable stylesheet (drop the "stub pass" comment) that styles
+  the product cards, the cart/confirmation tables, the checkout form and the demo notes; (2) replaces
+  `tests/test_styling_stub.py` with `tests/test_styling.py` (real assertions that the stylesheet serves and
+  that the semantic classes render); and (3) syncs `PLAN.md` (mark M8 -- real done with `- [x]` and a new
+  "all milestones delivered" next action), `ARCHITECTURE.md` (remove M8 -- real from "Not implemented yet",
+  describe the real stylesheet, name `test_styling.py`) and the `tests/test_env_and_docs.py` snapshot — all
+  in the same commit.
 - Next action: un-park and implement **M8 -- real** (styling) — the only remaining Pass 2 milestone.

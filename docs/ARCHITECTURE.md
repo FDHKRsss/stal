@@ -279,6 +279,13 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   and the plan-state tests now record M9 -- real as delivered.
 
 
+- 2026-09-07 (architect): **M8 -- real still not delivered this round** — reported green, but
+  `git status` shows only `docs/lessons/patterns.md` changed: `stal/static/style.css` is still the bare
+  stub (header comment "stub pass"; it styles only the layout shell, not the `product-grid`/`product-card`,
+  `cart-lines`, `checkout-form`, `order-lines` or `demo-note` classes the templates already emit) and
+  `tests/test_styling_stub.py` still pins the stub. "What's in code" is unchanged — M8 -- real remains
+  the only not-implemented Pass 2 item.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
