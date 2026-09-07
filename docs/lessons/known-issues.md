@@ -12,8 +12,10 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
   commit** (and be committed immediately — uncommitted accepted work gets re-verified as drift). Editing
   docs without the test turns those tests red; merging `-- real` code without the docs leaves the suite
   **green** (the test asserts docs, not code), so only a manual doc-vs-tree diff or the critic catches the
-  stale stub docs. (Bit us on M2/M4/M8/M1 -- real, and on M5 -- real — merged at 216 green while
-  `cart.py` was still documented as a stub.)
+  stale stub docs. (Bit us on M2/M4/M8/M1 -- real, on M5 -- real — merged at 216 green while `cart.py` was
+  still documented as a stub — and on M7 -- real, where code + `test_confirmation.py` shipped but
+  PLAN/ARCHITECTURE + the snapshot test still mark M7 unchecked, so "Next action: implement M7 -- real"
+  points at already-done work.)
 
 - A `-- real` merge replaces a stub, and stale references to the stub linger beyond the code: the matching
   `tests/test_*_stub.py` must be renamed/rewritten and ARCHITECTURE's "What's in code" test-file list
@@ -29,3 +31,8 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
 
 - Routes live in `stal/__init__.py` (the app factory), not a separate `routes.py` and not blueprints —
   earlier notes wrongly treated `routes.py` as a required deliverable. Don't create or expect `routes.py`.
+
+- Milestones are not always finished in order: M7 -- real landed while M6 -- real was still parked, so it
+  had to minimally wire `cart.html`'s checkout form to POST `/zamowienie` while the rest of the cart page
+  stayed the stub. That edit is load-bearing — whoever finishes M6 -- real must preserve the `/zamowienie`
+  form and re-run the M7 confirmation tests.

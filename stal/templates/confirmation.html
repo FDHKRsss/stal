@@ -1,19 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}Stal — potwierdzenie (stub){% endblock %}
+{% block title %}Stal — potwierdzenie zamówienia{% endblock %}
 
 {% block content %}
 <h1>Zamówienie przyjęte</h1>
 
-<p>Wersja demonstracyjna (stub) — zamówienie przyjęte. To jest mock potwierdzenia
-   zamówienia w sklepie ze sprzedażą stali (śruby, nakrętki, pręty, kątowniki,
-   płaskowniki i rury).</p>
+<p class="demo-note">
+  To jest wersja demonstracyjna — żadne zamówienie nie zostało faktycznie
+  złożone, opłacone ani wysłane.
+</p>
 
-<p>Numer zamówienia: <strong>ZAM-DEMO-0001</strong> (przykładowy, tylko do prezentacji).</p>
-<p>Razem do zapłaty: <strong>0,00 zł</strong></p>
+<p>Numer zamówienia: <strong>{{ order.number }}</strong> <span class="demo-note">(przykładowy, tylko do prezentacji)</span></p>
 
-<p>To jest wersja demonstracyjna — żadne zamówienie nie zostało faktycznie złożone,
-   opłacone ani wysłane.</p>
+<section>
+  <h2>Twoje produkty</h2>
+  <table class="order-lines">
+    <thead>
+      <tr>
+        <th>Produkt</th>
+        <th>Wariant</th>
+        <th>Ilość</th>
+        <th>Wartość</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in lines %}
+      <tr>
+        <td>{{ line.product.name }}</td>
+        <td>{{ line.variant.label }}</td>
+        <td>{{ line.qty }}</td>
+        <td>{{ line.line_total | format_price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><strong>Razem do zapłaty: {{ total | format_price }}</strong></p>
+</section>
+
+<section>
+  <h2>Sposób płatności</h2>
+  <p>{{ order.payment_label }}</p>
+</section>
+
+<section>
+  <h2>Miejsce dostawy</h2>
+  <p>{{ order.delivery_label }}{% if order.address %} — {{ order.address }}{% endif %}</p>
+</section>
 
 <p><a href="{{ url_for('index') }}">Wróć na stronę główną</a></p>
 {% endblock %}

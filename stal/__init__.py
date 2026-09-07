@@ -1,5 +1,7 @@
 """Flask application factory for the steel mock e-shop."""
 
+from datetime import datetime
+
 from flask import (
     Flask,
     flash,
@@ -11,9 +13,33 @@ from flask import (
     url_for,
 )
 
-from stal.cart import MAX_QTY, add_item, cart_count
+from stal.cart import (
+    MAX_QTY,
+    add_item,
+    cart_count,
+    cart_lines,
+    clear_cart,
+)
 from stal.catalog import PRODUCTS, get_product, get_variant
 from stal.config import Config
+
+# Mocked checkout options (no real payment/order integration). The keys are
+# what the forms submit; the values are the Polish labels shown to the owner.
+PAYMENT_METHODS = {
+    "przelew": "przelew bankowy (przedpłata)",
+    "karta": "karta płatnicza online",
+    "gotowka": "gotówka przy odbiorze",
+    "odroczony": "przelew z odroczonym terminem (dla firm)",
+}
+
+DELIVERY_METHODS = {
+    "odbior": "odbiór osobisty (magazyn)",
+    "kurier": "dostawa kurierem",
+    "transport": "dostawa transportem własnym",
+}
+
+# The only delivery option that does not require an address.
+PICKUP_DELIVERY = "odbior"
 
 
 def create_app():
@@ -91,15 +117,67 @@ def create_app():
 
     @app.get("/zamowienie")
     def order_redirect():
-        # Stub: GET on the order endpoint just sends the visitor back to the
+        # GET on the order endpoint just sends the visitor back to the
         # summary page — there is nothing to submit via GET.
         return redirect(url_for("cart"))
 
     @app.post("/zamowienie")
     def place_order():
-        # Stub: the route ignores the submitted form and renders a fixed
-        # confirmation page so the whole checkout flow is clickable end-to-end.
-        return render_template("confirmation.html")
+        # Real pass: validate a non-empty cart, a known payment method, a known
+        # delivery location and (for deliveries) an address; then show a mocked
+        # confirmation and clear the cart. Invalid input never crashes — it
+        # flashes a Polish message and returns to the summary page.
+        payment_method = request.form.get("payment_method", "").strip()
+        delivery_method = request.form.get("delivery_method", "").strip()
+        address = request.form.get("address", "").strip()
+
+        try:
+            lines = cart_lines(session)
+        except KeyError:
+            # A stale/broken cart line can only exist if the catalog changed;
+            # drop it instead of crashing the demo.
+            clear_cart(session)
+            flash(
+                "Koszyk zawierał nieaktualne pozycje i został wyczyszczony.",
+                "error",
+            )
+            return redirect(url_for("offer"))
+
+        if not lines:
+            flash(
+                "Twój koszyk jest pusty. Dodaj produkty przed złożeniem zamówienia.",
+                "error",
+            )
+            return redirect(url_for("cart"))
+
+        if payment_method not in PAYMENT_METHODS:
+            flash("Wybierz prawidłowy sposób płatności.", "error")
+            return redirect(url_for("cart"))
+
+        if delivery_method not in DELIVERY_METHODS:
+            flash("Wybierz prawidłowe miejsce dostawy.", "error")
+            return redirect(url_for("cart"))
+
+        if delivery_method != PICKUP_DELIVERY and not address:
+            flash(
+                "Podaj adres dostawy (wymagany, gdy nie wybierasz odbioru osobistego).",
+                "error",
+            )
+            return redirect(url_for("cart"))
+
+        order_number = datetime.now().strftime("ZAM-%Y%m%d-%H%M%S")
+        total = round(sum(line["line_total"] for line in lines), 2)
+        order = {
+            "number": order_number,
+            "payment_label": PAYMENT_METHODS[payment_method],
+            "delivery_label": DELIVERY_METHODS[delivery_method],
+            "address": address if delivery_method != PICKUP_DELIVERY else None,
+        }
+
+        clear_cart(session)
+        return render_template(
+            "confirmation.html", lines=lines, total=total, order=order
+        )
 
     @app.get("/health")
     def health():

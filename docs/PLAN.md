@@ -94,7 +94,7 @@ totals, per-line quantity update/remove forms, and the mocked payment-method + d
 
 ### M7 — Order confirmation (mocked)
 - [x] M7 -- stub
-- [ ] M7 -- real
+- [x] M7 -- real
 
 Deliverable: `templates/confirmation.html`; POST `/zamowienie` (GET redirects to `/koszyk`).
 Stub = returns a fixed "zamówienie przyjęte" string. Real = validates non-empty cart + chosen payment +
@@ -208,5 +208,12 @@ add/update/remove/merge/validation, and a full route flow
   M6 stub and `tests/test_cart_page_stub.py` still pins the stub (the 220 green tests are the stub
   suite, not M6 -- real). Parking `M6 -- real` as `- [~]` so the coder moves on to M7 instead of
   re-trying the same stuck item.
-- Next action: implement **M7 -- real** (M6 -- real is parked this round), committing on each
+- 2026-09-07 (coder): **M7 -- real accepted** — 234 tests green (`pytest -q`). `stal/__init__.py` now
+  implements the real `POST /zamowienie` (validates a non-empty cart, a known payment method, a known
+  delivery location and an address when required; generates a `ZAM-YYYYMMDD-HHMMSS` order number;
+  renders the live items/total and the chosen payment/delivery; then clears the cart) and
+  `stal/templates/confirmation.html` renders that validated, clearly-demo confirmation.
+  `tests/test_confirmation.py` replaces `tests/test_confirmation_stub.py`. Plan, "What's in code" and
+  the plan-state tests updated to record it.
+- Next action: implement **M8 -- real** (M6 -- real remains parked), committing on each
   milestone acceptance.

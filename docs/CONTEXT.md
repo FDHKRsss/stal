@@ -19,6 +19,9 @@ Non-negotiables:
 - `README.md` is owned by the goal / human gate — read only; put all plans/design/notes in `docs/`.
 - Two-pass build: Pass 1 ships each milestone as a stub (whole app clickable end-to-end); Pass 2 replaces
   each with the real implementation. Stub code is intentional, not unfinished.
-- `docs/PLAN.md` + `docs/ARCHITECTURE.md` are pinned by `tests/test_env_and_docs.py` (milestone checkbox
-  state, the "Next action" line, acceptance notes, and a few specific "What's in code" strings). Update the
-  docs and those tests together in one commit, or the suite fails.
+- `docs/PLAN.md` + `docs/ARCHITECTURE.md` are pinned by `tests/test_env_and_docs.py` (checkbox state, the
+  "Next action" line, acceptance notes, "What's in code" strings): code, docs and that snapshot test must
+  ship in **one commit**. A green `pytest -q` only proves the suite passes, **not** that the current
+  `-- real` milestone is delivered — the suite pins the stub until `tests/test_*_stub.py` is replaced, and
+  real code alone is not done until the docs + snapshot are synced. Confirm the real code **and** the synced
+  docs before accepting.
