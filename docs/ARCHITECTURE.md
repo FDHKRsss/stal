@@ -196,10 +196,14 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
 - 2026-09-07 (architect): accepted **M4 -- stub** (65 tests green). `/oferta` renders `shop.html` with a
   per-product add-to-cart form, and `POST /oferta/dodaj` flashes a fixed demo message then redirects back.
   "What's in code" updated to record M4 -- stub as accepted.
+- 2026-09-07 (architect): accepted **M5 -- stub** (78 tests green). `stal/cart.py` exposes the full cart
+  API as stubs (`get_cart`, `add_item`, `update_item`, `remove_item`, `clear_cart`, `cart_lines`,
+  `cart_total`, `cart_count`) returning fixed/empty data and ignoring the `session` argument (no real
+  session logic). "What's in code" and the plan-state tests updated to record it.
 
 ## What's in code (stubs vs real) — current status
 
-- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub` and `M4 -- stub`.
+- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub` and `M5 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with four routes: `/` renders `index.html` (homepage stub),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
@@ -208,6 +212,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     intentionally does **not** read the environment or a `.env` file.
   - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
     raise `KeyError` on unknown ids.
+  - `stal/cart.py` — cart helpers (stub): `get_cart`, `add_item`, `update_item`, `remove_item`,
+    `clear_cart`, `cart_lines`, `cart_total` and `cart_count` all return fixed/empty data and ignore the
+    `session` argument (no real session logic).
   - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks) that
     renders flashed messages.
   - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
@@ -219,10 +226,11 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
-    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py` — **65 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M5`–`M9`. `cart.py`,
-  `routes.py`, `static/`, the remaining templates (`cart.html`, `confirmation.html`, `404.html`),
-  `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the real-pass design.
+    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
+    `tests/test_cart_stub.py` — **78 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M6`–`M9`. `routes.py`, `static/`, the
+  remaining templates (`cart.html`, `confirmation.html`, `404.html`), `test_cart.py` and `test_routes.py`
+  do not exist yet; they are described above as the real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

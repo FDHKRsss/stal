@@ -1,4 +1,4 @@
-"""Tests for the M1/M2/M3/M4 stub environment handling and doc polish items.
+"""Tests for the M1–M5 stub environment handling and doc polish items.
 
 These validate the *current* stub deliverables precisely:
 - the stub config is static (it must NOT read the process environment or a
@@ -89,7 +89,7 @@ def test_env_example_does_not_instruct_setting_or_exporting_env_vars():
 # --- `PLAN.md` milestone state -------------------------------------------
 
 
-def test_plan_marks_m1_through_m4_stub_done():
+def test_plan_marks_m1_through_m5_stub_done():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
     lines = content.splitlines()
     checked = [ln.strip() for ln in lines if ln.strip().startswith("- [x]")]
@@ -98,10 +98,12 @@ def test_plan_marks_m1_through_m4_stub_done():
         "- [x] M2 -- stub",
         "- [x] M3 -- stub",
         "- [x] M4 -- stub",
+        "- [x] M5 -- stub",
     ]
 
     # Counts: each acceptance note records the exact green count at that point,
-    # while the historical M1/M2/M3 notes keep their original counts.
+    # while the historical M1/M2/M3/M4 notes keep their original counts.
+    assert "**M5 -- stub accepted** — 78 tests green" in content
     assert "**M4 -- stub accepted** — 65 tests green" in content
     assert "**M3 -- stub accepted** — 49 tests green" in content
     assert "**M2 -- stub accepted** — 35 tests green" in content
@@ -113,13 +115,13 @@ def test_plan_real_steps_and_remaining_milestones_still_unchecked():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
     for n in range(1, 10):
         assert f"- [ ] M{n} -- real" in content
-    for n in range(5, 10):
+    for n in range(6, 10):
         assert f"- [ ] M{n} -- stub" in content
 
 
-def test_plan_next_action_points_to_m5_stub():
+def test_plan_next_action_points_to_m6_stub():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
-    assert "Next action: implement **M5 -- stub**" in content
+    assert "Next action: implement **M6 -- stub**" in content
 
 
 # --- `ARCHITECTURE.md` "What's in code" accuracy --------------------------
@@ -130,19 +132,21 @@ def _whats_in_code_section():
     return arch.split("## What's in code", 1)[1]
 
 
-def test_architecture_records_m1_through_m4_stub_as_implemented():
+def test_architecture_records_m1_through_m5_stub_as_implemented():
     section = _whats_in_code_section()
     assert "Implemented so far (Pass 1):" in section
     assert "`M1 -- stub`" in section
     assert "`M2 -- stub`" in section
     assert "`M3 -- stub`" in section
     assert "`M4 -- stub`" in section
+    assert "`M5 -- stub`" in section
     # The routes are described as rendering the real templates (not fixed text).
     assert "`/` renders `index.html`" in section
     assert "`/oferta` renders `shop.html`" in section
     assert "`/health` returns" in section
     # Count fix: the test bullet must say the current total, not a stale count.
-    assert "**65 passing**" in section
+    assert "**78 passing**" in section
+    assert "**65 passing**" not in section
     assert "**49 passing**" not in section
     assert "**35 passing**" not in section
 
@@ -154,6 +158,7 @@ def test_architecture_lists_implemented_files_that_exist_on_disk():
         "stal/__init__.py": "stal/__init__.py",
         "stal/config.py": "stal/config.py",
         "stal/catalog.py": "stal/catalog.py",
+        "stal/cart.py": "stal/cart.py",
         "stal/templates/base.html": "stal/templates/base.html",
         "stal/templates/index.html": "stal/templates/index.html",
         "stal/templates/shop.html": "stal/templates/shop.html",
@@ -177,8 +182,8 @@ def test_architecture_marks_unimplemented_files_as_not_yet_existing():
     # listed as not-yet.
     assert "catalog.py" not in not_yet
     assert "shop.html" not in not_yet
+    assert "`cart.py`" not in not_yet
     unimplemented = {
-        "cart.py": "stal/cart.py",
         "routes.py": "stal/routes.py",
         "static/": "stal/static",
         "cart.html": "stal/templates/cart.html",
@@ -194,6 +199,8 @@ def test_architecture_marks_unimplemented_files_as_not_yet_existing():
 
 def test_architecture_has_stub_acceptance_notes():
     arch = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
+    assert "accepted **M5 -- stub**" in arch
+    assert "accepted **M5 -- stub** (78 tests green)" in arch
     assert "accepted **M4 -- stub**" in arch
     assert "accepted **M4 -- stub** (65 tests green)" in arch
     assert "accepted **M3 -- stub**" in arch

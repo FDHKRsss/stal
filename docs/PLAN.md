@@ -74,7 +74,7 @@ cards with a variant dropdown and a quantity dropdown, server-side validation on
 `/oferta` with a success/error flash message.
 
 ### M5 — Cart logic (session, no DB)
-- [ ] M5 -- stub
+- [x] M5 -- stub
 - [ ] M5 -- real
 
 Deliverable: `stal/cart.py` — pure helpers over `session`: `get_cart`, `add_item`, `update_item`,
@@ -139,5 +139,9 @@ add/update/remove/merge/validation, and a full route flow
   added; GET `/oferta` renders the offer stub (each product's name + unit with a per-product "Dodaj do
   koszyka" form posting to `/oferta/dodaj`) and POST `/oferta/dodaj` flashes a fixed demo message then
   redirects back to `/oferta`. Plan, "What's in code" and the plan-state tests updated to record it.
-- Next action: implement **M5 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (architect): **M5 -- stub accepted** — 78 tests green (`pytest -q`). `stal/cart.py` added
+  with the full cart API as stubs (`get_cart`, `add_item`, `update_item`, `remove_item`, `clear_cart`,
+  `cart_lines`, `cart_total`, `cart_count`) returning fixed/empty data and ignoring the `session`
+  argument (no real session logic). Plan, "What's in code" and the plan-state tests updated to record it.
+- Next action: implement **M6 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.
