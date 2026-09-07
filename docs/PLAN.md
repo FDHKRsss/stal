@@ -102,7 +102,7 @@ delivery (+ address when required), shows a mock order number, the items, the ch
 total, then clears the cart. Includes a clear "to jest wersja demonstracyjna" note.
 
 ### M8 — Styling & UX polish
-- [ ] M8 -- stub
+- [x] M8 -- stub
 - [ ] M8 -- real
 
 Deliverable: `stal/static/style.css`, shared header/nav with cart count, flash messages, footer.
@@ -153,5 +153,10 @@ add/update/remove/merge/validation, and a full route flow
   `ZAM-DEMO-0001`, `0,00 zł` total and a link back to the homepage) and GET `/zamowienie` redirects to
   `/koszyk`; the cart page now posts a "Złóż zamówienie" form to `/zamowienie`. Plan, "What's in code" and
   the plan-state tests updated to record it.
-- Next action: implement **M8 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (tester): **M8 -- stub accepted** — 133 tests green (`pytest -q`). Added
+  `stal/static/style.css` and reworked `stal/templates/base.html` with a shared header/nav (brand +
+  Oferta + Koszyk with a `cart-count` badge), flash rendering and a footer; `create_app()` now injects
+  `cart_count` via a context processor (returns `0` in the stub). Plan, "What's in code" and the
+  plan-state tests updated to record it.
+- Next action: implement **M9 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.

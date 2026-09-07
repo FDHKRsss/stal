@@ -2,19 +2,35 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Stal — sklep demonstracyjny{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <ul class="flashes">
-        {% for category, message in messages %}
-          <li class="flash flash-{{ category }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+  <header class="site-header">
+    <nav class="site-nav">
+      <a class="nav-brand" href="{{ url_for('index') }}">Stal</a>
+      <a href="{{ url_for('offer') }}">Oferta</a>
+      <a href="{{ url_for('cart') }}">Koszyk <span class="cart-count">{{ cart_count }}</span></a>
+    </nav>
+  </header>
 
-  {% block content %}{% endblock %}
+  <main class="site-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="flash flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>Stal — sklep demonstracyjny. Wersja demonstracyjna (mock).</p>
+  </footer>
 </body>
 </html>

@@ -1,7 +1,8 @@
 """Flask application factory for the steel mock e-shop."""
 
-from flask import Flask, flash, redirect, render_template, url_for
+from flask import Flask, flash, redirect, render_template, session, url_for
 
+from stal.cart import cart_count
 from stal.catalog import PRODUCTS
 from stal.config import Config
 
@@ -10,6 +11,12 @@ def create_app():
     """Create and configure the Flask application (stub pass)."""
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    @app.context_processor
+    def inject_cart_count():
+        # Stub pass: cart_count() ignores the session and returns 0, but the
+        # shared nav badge is already wired to the documented cart helper.
+        return {"cart_count": cart_count(session)}
 
     @app.get("/")
     def index():

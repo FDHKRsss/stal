@@ -200,7 +200,6 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   API as stubs (`get_cart`, `add_item`, `update_item`, `remove_item`, `clear_cart`, `cart_lines`,
   `cart_total`, `cart_count`) returning fixed/empty data and ignoring the `session` argument (no real
   session logic). "What's in code" and the plan-state tests updated to record it.
-
 - 2026-09-07 (architect): accepted **M6 -- stub** (102 tests green). `stal/templates/cart.html` added;
   GET `/koszyk` renders the summary stub (empty-cart note + `0,00 zł` total, mocked payment-method radios
   and delivery `<select>` plus an address field) and POST `/koszyk/aktualizuj` flashes a fixed demo message
@@ -209,18 +208,23 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   POST `/zamowienie` renders the static mocked confirmation and GET `/zamowienie` redirects to `/koszyk`;
   the cart page now posts a "Złóż zamówienie" form to `/zamowienie`. "What's in code" updated to record
   M7 -- stub as accepted.
+- 2026-09-07 (tester): accepted **M8 -- stub** (133 tests green). Added `stal/static/style.css` and reworked
+  `base.html` with a shared header/nav (brand + Oferta + Koszyk with a `cart-count` badge), flash rendering
+  and a footer; `create_app()` injects `cart_count` via a context processor (returns `0` in the stub).
+  "What's in code" and the doc-state tests updated to match.
 
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
-  `M6 -- stub` and `M7 -- stub`.
+  `M6 -- stub`, `M7 -- stub` and `M8 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage stub),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
     redirects to `/oferta`, `GET /koszyk` renders `cart.html` (summary stub),
     `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
     `GET /zamowienie` redirects to `/koszyk`, `POST /zamowienie` renders `confirmation.html`
-    (mocked confirmation), and `/health` returns `"ok"`.
+    (mocked confirmation), and `/health` returns `"ok"`; a context processor injects `cart_count`
+    (from `stal.cart.cart_count`, `0` in the stub) for the shared nav badge.
   - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
     intentionally does **not** read the environment or a `.env` file.
   - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
@@ -228,8 +232,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `stal/cart.py` — cart helpers (stub): `get_cart`, `add_item`, `update_item`, `remove_item`,
     `clear_cart`, `cart_lines`, `cart_total` and `cart_count` all return fixed/empty data and ignore the
     `session` argument (no real session logic).
-  - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks) that
-    renders flashed messages.
+  - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks) with
+    a shared header/nav (brand + Oferta + Koszyk with a `cart-count` badge), flash rendering, a stylesheet
+    link to `/static/style.css` and a footer.
   - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
     assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury), clearly marked as demo/stub, with a
     CTA link to `/oferta`.
@@ -243,16 +248,18 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `stal/templates/confirmation.html` — mocked order confirmation (extends `base.html`): a static
     "Zamówienie przyjęte" heading, a demo order number `ZAM-DEMO-0001`, a `0,00 zł` total and a link back
     to the homepage.
+  - `stal/static/style.css` — a bare, usable stylesheet for the header/nav, main area, flash messages and
+    footer.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
     `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
-    `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py` —
-    **119 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M8`–`M9`. `routes.py`, `static/`, the
-  remaining template (`404.html`), `test_cart.py` and `test_routes.py`
-  do not exist yet; they are described above as the real-pass design.
+    `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
+    `tests/test_styling_stub.py` — **133 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M9`. `routes.py`, the remaining template
+  (`404.html`), `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the
+  real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.
