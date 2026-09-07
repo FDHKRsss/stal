@@ -195,18 +195,26 @@ def test_plan_marks_m1_real_done():
     assert "- [x] M1 -- real" in _plan_text()
 
 
+def test_plan_marks_m2_real_done():
+    assert "- [x] M2 -- real" in _plan_text()
+
+
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    for n in range(2, 10):
+    for n in range(3, 10):
         assert f"- [ ] M{n} -- real" in content
 
 
-def test_plan_next_action_points_to_m2_real():
-    assert "Next action: implement **M2 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m3_real():
+    assert "Next action: implement **M3 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
     assert "M1 -- real accepted" in _plan_text()
+
+
+def test_plan_has_m2_real_acceptance_note():
+    assert "M2 -- real accepted" in _plan_text()
 
 
 def test_architecture_config_described_as_env_driven():
@@ -229,3 +237,7 @@ def test_architecture_404_is_implemented_and_routes_still_missing():
 
 def test_architecture_has_m1_real_acceptance_note():
     assert "accepted **M1 -- real**" in _arch_text()
+
+
+def test_architecture_has_m2_real_acceptance_note():
+    assert "accepted **M2 -- real**" in _arch_text()

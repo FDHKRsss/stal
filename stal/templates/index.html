@@ -1,10 +1,84 @@
 {% extends "base.html" %}
 
-{% block title %}Stal — strona główna (stub){% endblock %}
+{% block title %}Stal — strona główna{% endblock %}
 
 {% block content %}
-<h1>Stal</h1>
-<p>Wersja demonstracyjna (stub) — mock sklepu internetowego ze sprzedażą stali.</p>
-<p>Asortyment: śruby, nakrętki, pręty, kątowniki, płaskowniki i rury stalowe.</p>
-<p><a href="{{ url_for('offer') }}">Przejdź do oferty</a></p>
+<header class="page-intro">
+  <h1>Stal — sprzedaż stali online</h1>
+  <p class="lead">
+    Śruby, nakrętki, pręty, kątowniki, płaskowniki i rury stalowe —
+    zamówione z biura lub z telefonu, a nie z okienka magazynu.
+  </p>
+</header>
+
+<section>
+  <h2>O nas</h2>
+  <p>
+    Jesteśmy hurtownią stali i elementów złącznych. W naszej ofercie znajdziesz
+    śruby, nakrętki, pręty, kątowniki, płaskowniki i rury stalowe w różnych
+    długościach i gatunkach. Ten sklep internetowy to prezentacja naszego
+    asortymentu — pokazuje, jak prosto można wybrać produkt, ilość i wariant,
+    a potem złożyć zamówienie bez konieczności dzwonienia i dojazdu na miejsce.
+  </p>
+</section>
+
+<section>
+  <h2>Asortyment — z czego można wybierać</h2>
+  <ul>
+    <li><strong>Śruby i nakrętki</strong> — elementy złączne w opakowaniach zbiorczych (po 100 sztuk).</li>
+    <li><strong>Pręty</strong> — pręty stalowe okrągłe i gwintowane, w sztangach.</li>
+    <li><strong>Kątowniki</strong> — kształtowniki równoramienne i nierównoramienne, w sztangach.</li>
+    <li><strong>Płaskowniki</strong> — płaskie wyroby stalowe, w sztangach.</li>
+    <li><strong>Rury stalowe</strong> — rury o różnych średnicach i grubościach ścianki, w sztangach.</li>
+  </ul>
+  <p>
+    Wyroby sprzedawane na sztangi dostępne są w długościach
+    <strong>3 m</strong> i <strong>6 m</strong>, w różnych gatunkach stali —
+    na przykład zwykłej konstrukcyjnej <strong>S235JR</strong> albo stali
+    nierdzewnej. Długość i gatunek wybierasz przy dodawaniu produktu do koszyka.
+  </p>
+</section>
+
+<section>
+  <h2>Jak wygląda zakup stali dzisiaj</h2>
+  <p>
+    Dziś, żeby kupić rurę, kątownik albo płaskownik, trzeba najpierw zadzwonić
+    po kolei do kilku dostawców — swoich ulubionych, na przykład Domu Stali czy
+    ItalInox — i pytać, czy w ogóle mają towar na stanie, w jakich długościach
+    i w jakiej jakości. Dopiero potem można zamówić.
+  </p>
+  <ol>
+    <li>Dzwonisz do dostawcy i ustalasz, co jest dostępne.</li>
+    <li>Wsiadasz w samochód i jedziesz na miejsce.</li>
+    <li>Podchodzisz do okienka i powtarzasz, co chcesz kupić.</li>
+    <li>Pani w komputerze sprawdza rezerwację i drukuje karteczkę.</li>
+    <li>Z karteczką jedziesz na magazyn, gdzie towar jest wyszukiwany i cięty na wybrane kawałki.</li>
+    <li>Pakujesz towar do auta i wracasz do kasy z podpisaną karteczką.</li>
+    <li>Płacisz, odbierasz podpis i stempel, a przy bramie ochroniarz sprawdza towar.</li>
+  </ol>
+  <p>
+    To sprawdza się, ale kosztuje czas: telefony, dojazd, kolejki przy okienku
+    i na magazynie. Przy większym zamówieniu to często pół dnia zamiast kilku
+    minut przed komputerem.
+  </p>
+</section>
+
+<section>
+  <h2>Dlaczego warto kupować online</h2>
+  <ul>
+    <li>Od razu widzisz asortyment, długości (3 m / 6 m), gatunek stali i cenę.</li>
+    <li>Wybierasz wariant i ilość w kilku kliknięciach — bez dzwonienia do kilku dostawców.</li>
+    <li>Składasz zamówienie z biura, z placu budowy albo z domu.</li>
+    <li>Rezerwujesz towar z wyprzedzeniem i skracasz czas odbioru na miejscu.</li>
+  </ul>
+</section>
+
+<p class="cta">
+  <a class="button" href="{{ url_for('offer') }}">Przejdź do oferty</a>
+</p>
+
+<p class="demo-note">
+  To jest wersja demonstracyjna — żadne zamówienie nie jest faktycznie
+  składane, opłacane ani realizowane.
+</p>
 {% endblock %}

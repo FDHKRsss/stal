@@ -32,8 +32,9 @@ def test_root_returns_homepage(client):
     assert resp.mimetype == "text/html"
     text = resp.get_data(as_text=True)
     assert "Stal" in text
-    # The homepage is still the M2 stub in this pass.
-    assert "stub" in text.lower()
+    # The homepage is now the real M2 copy in this pass.
+    assert "O nas" in text
+    assert "(stub)" not in text
 
 
 def test_health_returns_json_status_ok(client):

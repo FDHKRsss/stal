@@ -225,13 +225,18 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
 
 - 2026-09-07 (architect): committed M9 -- stub and M1 -- real (140 tests green).
 
+- 2026-09-07 (coder): accepted **M2 -- real** (149 tests green). `stal/templates/index.html` now carries
+  the full Polish homepage copy (company intro, assortment brainstorm, manual buying process, why-online
+  section and a CTA to `/oferta`); `tests/test_homepage.py` replaces `tests/test_homepage_stub.py` and
+  `tests/test_skeleton.py` now asserts the real copy. "What's in code" and the doc-state tests updated.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
-- **Implemented so far (Pass 2):** `M1 -- real`.
+- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
-  - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage stub),
+  - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
     redirects to `/oferta`, `GET /koszyk` renders `cart.html` (summary stub),
     `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
@@ -249,9 +254,10 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks) with
     a shared header/nav (brand + Oferta + Koszyk with a `cart-count` badge), flash rendering, a stylesheet
     link to `/static/style.css` and a footer.
-  - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
-    assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury), clearly marked as demo/stub, with a
-    CTA link to `/oferta`.
+  - `stal/templates/index.html` — homepage (real copy, extends `base.html`): full Polish copy with the
+    company intro, the steel assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury; lengths
+    3 m / 6 m; quality variants such as S235JR / nierdzewna), the current manual buying process, why buying
+    online helps, a CTA to `/oferta` and a „wersja demonstracyjna" note.
   - `stal/templates/shop.html` — offer stub (extends `base.html`): lists each catalog product's name + unit
     with a per-product "Dodaj do koszyka" form posting to `/oferta/dodaj`.
   - `stal/templates/cart.html` — summary stub (extends `base.html`): an empty-cart note with a `0,00 zł`
@@ -273,9 +279,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `tests/test_routes.py` — stub smoke test: `create_app()` builds a Flask app and `/health` answers 200
     through the Flask test client.
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
-    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
+    `tests/test_homepage.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
     `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **140 passing**.
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **149 passing**.
 - **Not implemented yet (still to do in Pass 2):** `routes.py` does not exist yet; it is described above as
   the real-pass design.
 

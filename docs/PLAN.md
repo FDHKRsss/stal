@@ -48,7 +48,7 @@ the stub app. Real = env-driven `HOST` / `PORT` / `SECRET_KEY` / `FLASK_DEBUG` c
 
 ### M2 — Homepage (description + brainstorm)
 - [x] M2 -- stub
-- [ ] M2 -- real
+- [x] M2 -- real
 
 Deliverable: `templates/base.html` + `templates/index.html`; GET `/`.
 Stub = a plain-text homepage summarizing the company/topic. Real = full Polish copy: company intro, the
@@ -169,4 +169,10 @@ add/update/remove/merge/validation, and a full route flow
   launch scripts run the real config. `tests/test_env_and_docs.py` and the doc state updated to match.
 - 2026-09-07 (architect): committed **M9 -- stub** + **M1 -- real** together (140 tests green).
   All Pass-1 stubs are now complete; Pass 2 continues with M2 -- real.
-- Next action: implement **M2 -- real**, committing on each milestone acceptance.
+- 2026-09-07 (coder): **M2 -- real accepted** — 149 tests green (`pytest -q`).
+  `stal/templates/index.html` now carries the full Polish homepage copy (company intro, the steel
+  assortment with lengths 3 m / 6 m and quality variants, the current manual buying process, why buying
+  online helps and a CTA to `/oferta`). `tests/test_homepage.py` replaces `tests/test_homepage_stub.py`,
+  and `tests/test_skeleton.py` now asserts the real copy. Plan, "What's in code" and the plan-state tests
+  updated to record it.
+- Next action: implement **M3 -- real**, committing on each milestone acceptance.
