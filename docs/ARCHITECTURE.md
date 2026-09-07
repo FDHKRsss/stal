@@ -252,6 +252,13 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   session-backed cart (see the Data model / cart section); `tests/test_cart.py` replaces
   `tests/test_cart_stub.py`. "What's in code" updated to record the real cart.
 
+- 2026-09-07 (architect): committed **M5 -- real** (220 tests green) — the accepted cart work had
+  been left uncommitted; recorded as `milestone: M5 cart logic (real)`.
+- 2026-09-07 (architect): **M6 -- real not delivered this round** — reported green, but
+  `stal/templates/cart.html` and the `GET /koszyk` / `POST /koszyk/aktualizuj` routes are still the
+  M6 stub and `tests/test_cart_page_stub.py` still pins the stub. Parked `M6 -- real` as `- [~]` so
+  the coder moves on to M7.
+
 
 ## What's in code (stubs vs real) — current status
 
@@ -313,8 +320,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
     `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
     `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **220 passing**.
-- **Not implemented yet (still to do in Pass 2):** `M6 -- real` (summary/checkout),
-  `M7 -- real` (order confirmation), `M8 -- real` (styling) and `M9 -- real` (tests & robustness).
+- **Not implemented yet (still to do in Pass 2):** `M6 -- real` (summary/checkout — **parked this
+  round**: reported green but still the stub, see review notes), `M7 -- real` (order confirmation),
+  `M8 -- real` (styling) and `M9 -- real` (tests & robustness).
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

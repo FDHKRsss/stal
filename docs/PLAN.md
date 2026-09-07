@@ -85,7 +85,7 @@ duplicate add, line totals and grand total, and a cart count helper.
 
 ### M6 — Summary / checkout page
 - [x] M6 -- stub
-- [ ] M6 -- real
+- [~] M6 -- real
 
 Deliverable: `templates/cart.html`; GET `/koszyk` + POST `/koszyk/aktualizuj`.
 Stub = static summary with payment/delivery dropdowns that do nothing. Real = renders the real cart lines and
@@ -200,4 +200,13 @@ add/update/remove/merge/validation, and a full route flow
   nav-badge unit count; `POST /oferta/dodaj` and the shared nav badge now use the real helper.
   `tests/test_cart.py` replaces `tests/test_cart_stub.py`. Plan, "What's in code" and the
   plan-state tests updated to record it.
-- Next action: implement **M6 -- real**, committing on each milestone acceptance.
+- 2026-09-07 (architect): committed **M5 -- real** (220 tests green) — the cart implementation,
+  its tests and the doc/test updates had been left uncommitted after acceptance; recorded as
+  `milestone: M5 cart logic (real)`.
+- 2026-09-07 (architect): **M6 -- real not delivered this round** — the coder reported green, but
+  `stal/templates/cart.html` and the `GET /koszyk` / `POST /koszyk/aktualizuj` routes are still the
+  M6 stub and `tests/test_cart_page_stub.py` still pins the stub (the 220 green tests are the stub
+  suite, not M6 -- real). Parking `M6 -- real` as `- [~]` so the coder moves on to M7 instead of
+  re-trying the same stuck item.
+- Next action: implement **M7 -- real** (M6 -- real is parked this round), committing on each
+  milestone acceptance.
