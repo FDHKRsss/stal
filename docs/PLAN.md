@@ -66,7 +66,7 @@ quality variants), each with `id`, `name`, `category`, `description`, `unit`, an
 
 ### M4 — Offer / shop page
 - [x] M4 -- stub
-- [ ] M4 -- real
+- [x] M4 -- real
 
 Deliverable: `templates/shop.html`; GET `/oferta` + POST `/oferta/dodaj`.
 Stub = lists product names; the add-to-cart form posts and redirects with a hardcoded flash. Real = product
@@ -185,4 +185,12 @@ add/update/remove/merge/validation, and a full route flow
   `S235JR`/`nierdzewna` quality) plus `get_product`/`get_variant` raising `KeyError` on unknown ids.
   `tests/test_catalog.py` replaces `tests/test_catalog_stub.py`. Plan, "What's in code" and the
   plan-state tests updated to record it.
-- Next action: implement **M4 -- real**, committing on each milestone acceptance.
+- 2026-09-07 (coder): **M4 -- real accepted** — 177 tests green (`pytest -q`). GET `/oferta` now
+  renders the real offer (`templates/shop.html`): one product card per catalog item with a variant
+  dropdown (label + price) and a quantity dropdown (`1..MAX_QTY`); POST `/oferta/dodaj` validates
+  `product_id`/`variant_id`/`qty` server-side and flashes a Polish success/error message before
+  redirecting back to `/oferta`. `tests/test_offer.py` replaces `tests/test_offer_stub.py`. Plan,
+  "What's in code" and the plan-state tests updated to record it.
+- 2026-09-07 (architect): committed **M4 -- real** (177 tests green). Reconciled the `routes.py`
+  design drift in ARCHITECTURE: routes live in `stal/__init__.py` (no separate `routes.py`).
+- Next action: implement **M5 -- real**, committing on each milestone acceptance.

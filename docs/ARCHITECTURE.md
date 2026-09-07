@@ -21,7 +21,7 @@ needs no server storage and no database. All product data is static Python data 
 | Database | **None** — Flask session (signed cookie) | The owner explicitly wants a mock, not a functional store. Server-side DBs, SQLite, and even JSON-file persistence were rejected as unnecessary complexity. Cookie size is fine for a small demo cart. |
 | Form handling | **Plain HTML forms + manual validation** in `cart.py`/routes | Avoids Flask-WTF/WTForms dependency. The few inputs (variant, quantity, payment, delivery, address) are easy to validate by hand. CSRF is intentionally out of scope for a non-auth demo. |
 | App structure | **App factory** (`create_app`) + thin `app.py` entry | Factory makes the app testable (Flask test client) and keeps config/route registration clean. A single-file app was rejected because catalog/cart logic benefits from separation for testing. |
-| Routes | One `routes.py` module (no blueprints) | Only ~6 endpoints; blueprints add ceremony with no benefit here. |
+| Routes | Registered directly in the app factory (`stal/__init__.py`, no blueprints) | Only a handful of endpoints; a separate module or blueprints would add ceremony with no benefit here. |
 | Product model | Flat `variants` list per product | A single "variant" dropdown whose label encodes length/quality (e.g. `6 m · S235JR`) is simpler and less error-prone than separate length+quality dropdowns with derived pricing, while still demonstrating the length/quality concept the owner described. |
 | Pricing | Hardcoded prices per variant | Real, believable numbers for the demo; no pricing math to get wrong. |
 | Config | Env vars with defaults (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`) | Port is configurable and defaults to a sensible value; the app never assumes a fixed port is free. |
@@ -41,7 +41,6 @@ needs no server storage and no database. All product data is static Python data 
 │   ├── config.py          # Config (reads env; defaults)
 │   ├── catalog.py         # PRODUCTS mock data + get_product/get_variant
 │   ├── cart.py            # pure cart helpers + validation (over Flask session)
-│   ├── routes.py          # all routes: /, /oferta, /oferta/dodaj, /koszyk, /koszyk/aktualizuj, /zamowienie, /health
 │   ├── templates/
 │   │   ├── base.html      # layout: header/nav (cart count), flash messages, footer
 │   │   ├── index.html     # homepage: description + brainstorm + CTA
@@ -240,15 +239,26 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   `get_product`/`get_variant` raising `KeyError`. `tests/test_catalog.py` replaces
   `tests/test_catalog_stub.py`. "What's in code" and the doc-state tests updated.
 
+- 2026-09-07 (coder): accepted **M4 -- real** (177 tests green). `stal/__init__.py` now registers the
+  real offer routes: GET `/oferta` renders `templates/shop.html` (one product card per catalog item
+  with a variant dropdown — label + price — and a quantity dropdown `1..MAX_QTY`) and
+  POST `/oferta/dodaj` validates `product_id`/`variant_id`/`qty` against the catalog, flashing a
+  Polish success/error message before redirecting back to `/oferta`. `tests/test_offer.py` replaces
+  `tests/test_offer_stub.py`. "What's in code" and the doc-state tests updated.
+- 2026-09-07 (architect): committed **M4 -- real** (177 tests green). Reconciled the `routes.py` design
+  drift: routes are implemented directly in `stal/__init__.py` (the app factory), so the project layout,
+  the routes decision and the "Not implemented yet" line now reflect that instead of a separate `routes.py`.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
-- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`.
+- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`, `M4 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
-    `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
-    redirects to `/oferta`, `GET /koszyk` renders `cart.html` (summary stub),
+    `/oferta` renders `shop.html` (real offer), `POST /oferta/dodaj` validates product/variant/quantity
+    server-side and flashes a Polish success/error message before redirecting to `/oferta`,
+    `GET /koszyk` renders `cart.html` (summary stub),
     `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
     `GET /zamowienie` redirects to `/koszyk`, `POST /zamowienie` renders `confirmation.html`
     (mocked confirmation), and `/health` returns `{"status": "ok"}`; a context processor injects `cart_count`
@@ -270,8 +280,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     company intro, the steel assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury; lengths
     3 m / 6 m; quality variants such as S235JR / nierdzewna), the current manual buying process, why buying
     online helps, a CTA to `/oferta` and a „wersja demonstracyjna" note.
-  - `stal/templates/shop.html` — offer stub (extends `base.html`): lists each catalog product's name + unit
-    with a per-product "Dodaj do koszyka" form posting to `/oferta/dodaj`.
+  - `stal/templates/shop.html` — offer (real, extends `base.html`): one product card per catalog item with
+    a variant dropdown (label + price) and a quantity dropdown (`1..MAX_QTY`), each card's "Dodaj do
+    koszyka" form posting to `/oferta/dodaj`.
   - `stal/templates/cart.html` — summary stub (extends `base.html`): an empty-cart note with a `0,00 zł`
     total, mocked payment-method radios (przelew / karta / gotówka / odroczony termin), a mocked delivery
     `<select>` (odbiór osobisty / kurier / transport własny) plus an address field, an "Zaktualizuj
@@ -291,11 +302,11 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `tests/test_routes.py` — stub smoke test: `create_app()` builds a Flask app and `/health` answers 200
     through the Flask test client.
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
-    `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer_stub.py`,
+    `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
     `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **161 passing**.
-- **Not implemented yet (still to do in Pass 2):** `routes.py` does not exist yet; it is described above as
-  the real-pass design.
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **177 passing**.
+- **Not implemented yet (still to do in Pass 2):** `M5 -- real` (session-backed cart), `M6 -- real` (summary/checkout),
+  `M7 -- real` (order confirmation), `M8 -- real` (styling) and `M9 -- real` (tests & robustness).
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

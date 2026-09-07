@@ -5,7 +5,12 @@ In this stub pass every helper returns fixed/empty data and ignores the
 ``session`` argument, so the module exists and can be imported end-to-end.
 The real, session-backed implementation — with quantity/product/variant
 validation, line merging and totals — arrives in the real pass.
+
+``MAX_QTY`` is already part of the public contract (used by the offer page's
+quantity dropdown and validation) so it is defined here from the start.
 """
+
+MAX_QTY = 99
 
 
 def get_cart(session):

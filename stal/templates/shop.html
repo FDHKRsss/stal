@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}Stal — oferta (stub){% endblock %}
+{% block title %}Stal — oferta{% endblock %}
 
 {% block content %}
 <h1>Oferta</h1>
-<p>Wersja demonstracyjna (stub) — wybierz produkt i dodaj go do koszyka.</p>
+<p class="lead">
+  Wybierz produkt, wariant (długość / jakość) i ilość, a następnie dodaj do
+  koszyka. To jest wersja demonstracyjna — zamówienia nie są realizowane.
+</p>
 
-<ul>
+<div class="product-grid">
   {% for product in products %}
-    <li>
-      <strong>{{ product.name }}</strong>
-      <span>({{ product.unit }})</span>
-      <form method="post" action="{{ url_for('add_to_cart') }}">
+    <article class="product-card">
+      <h2>{{ product.name }}</h2>
+      <p class="product-category">{{ product.category }}</p>
+      <p class="product-description">{{ product.description }}</p>
+      <p class="product-unit">Jednostka: {{ product.unit }}</p>
+
+      <form class="add-to-cart-form" method="post" action="{{ url_for('add_to_cart') }}">
         <input type="hidden" name="product_id" value="{{ product.id }}">
+
+        <label for="variant-{{ product.id }}">Wariant</label>
+        <select id="variant-{{ product.id }}" name="variant_id">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}">{{ variant.label }} — {{ variant.price | format_price }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="qty-{{ product.id }}">Ilość</label>
+        <select id="qty-{{ product.id }}" name="qty">
+          {% for n in range(1, max_qty + 1) %}
+            <option value="{{ n }}">{{ n }}</option>
+          {% endfor %}
+        </select>
+
         <button type="submit">Dodaj do koszyka</button>
       </form>
-    </li>
+    </article>
   {% endfor %}
-</ul>
+</div>
 {% endblock %}

@@ -203,14 +203,18 @@ def test_plan_marks_m3_real_done():
     assert "- [x] M3 -- real" in _plan_text()
 
 
+def test_plan_marks_m4_real_done():
+    assert "- [x] M4 -- real" in _plan_text()
+
+
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    for n in range(4, 10):
+    for n in range(5, 10):
         assert f"- [ ] M{n} -- real" in content
 
 
-def test_plan_next_action_points_to_m4_real():
-    assert "Next action: implement **M4 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m5_real():
+    assert "Next action: implement **M5 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -223,6 +227,10 @@ def test_plan_has_m2_real_acceptance_note():
 
 def test_plan_has_m3_real_acceptance_note():
     assert "M3 -- real accepted" in _plan_text()
+
+
+def test_plan_has_m4_real_acceptance_note():
+    assert "M4 -- real accepted" in _plan_text()
 
 
 def test_architecture_config_described_as_env_driven():
@@ -242,15 +250,18 @@ def test_architecture_catalog_described_as_real():
     assert "test_catalog_stub.py" not in section
 
 
-def test_architecture_404_is_implemented_and_routes_still_missing():
+def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     arch = _arch_text()
     section = arch.split("## What's in code", 1)[1]
     assert "Not implemented yet" in section
     not_yet = section.split("Not implemented yet", 1)[1]
     assert "404.html" not in not_yet
     assert (ROOT / "stal" / "templates" / "404.html").is_file()
-    assert "routes.py" in not_yet
+    # Routes live in the app factory (__init__.py), not a separate routes.py module.
+    assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
+    for n in range(5, 10):
+        assert f"M{n} -- real" in not_yet
 
 
 def test_architecture_has_m1_real_acceptance_note():
@@ -263,3 +274,17 @@ def test_architecture_has_m2_real_acceptance_note():
 
 def test_architecture_has_m3_real_acceptance_note():
     assert "accepted **M3 -- real**" in _arch_text()
+
+
+def test_architecture_has_m4_real_acceptance_note():
+    assert "accepted **M4 -- real**" in _arch_text()
+
+
+def test_architecture_offer_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # The real M4 offer landed; the "What's in code" section must describe it
+    # and must no longer name the replaced stub test.
+    assert "offer stub" not in section
+    assert "test_offer.py" in section
+    assert "test_offer_stub.py" not in section

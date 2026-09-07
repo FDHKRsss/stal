@@ -21,6 +21,10 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
   `test_homepage.py`) — not just editing the template — and updating ARCHITECTURE's "What's in code"
   test-file list (which still names the old `*_stub.py`) in the same commit, or the stub test goes red while
   docs drift.
+- Replacing a stub with its real version can also break *other* milestones' tests that pinned the stub's
+  transient copy/markers (e.g. `test_styling_stub.py` asserted the `/oferta/dodaj` flash; M4 -- real removed
+  it, so the assertion was re-pointed to `/koszyk/aktualizuj`). Before marking a stub→real milestone done,
+  grep the test suite for references to the old behavior and update them in the same commit.
 - A green `pytest -q` does **not** mean the current `-- real` milestone is delivered. Until its stub test is
   replaced, the suite still pins the stub — M3 -- real was reported "green" at 149 tests while
   `tests/test_catalog_stub.py` still asserted `len(PRODUCTS) == 2` and no real catalog had landed. Before

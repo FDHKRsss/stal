@@ -6,12 +6,13 @@ from flask import (
     jsonify,
     redirect,
     render_template,
+    request,
     session,
     url_for,
 )
 
-from stal.cart import cart_count
-from stal.catalog import PRODUCTS
+from stal.cart import MAX_QTY, add_item, cart_count
+from stal.catalog import PRODUCTS, get_product, get_variant
 from stal.config import Config
 
 
@@ -20,10 +21,15 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    @app.template_filter("format_price")
+    def format_price(value):
+        """Format a price as Polish currency, e.g. ``24,90 zł``."""
+        return f"{value:.2f}".replace(".", ",") + " zł"
+
     @app.context_processor
     def inject_cart_count():
-        # Stub pass: cart_count() ignores the session and returns 0, but the
-        # shared nav badge is already wired to the documented cart helper.
+        # The shared nav badge is wired to the documented cart helper; until
+        # the session-backed cart lands (M5 -- real) it returns 0.
         return {"cart_count": cart_count(session)}
 
     @app.get("/")
@@ -32,13 +38,44 @@ def create_app():
 
     @app.get("/oferta")
     def offer():
-        return render_template("shop.html", products=PRODUCTS)
+        return render_template("shop.html", products=PRODUCTS, max_qty=MAX_QTY)
 
     @app.post("/oferta/dodaj")
     def add_to_cart():
-        # Stub: the route ignores the submitted form and flashes a fixed
-        # message so the whole add-to-cart flow is clickable end-to-end.
-        flash("Dodano do koszyka (wersja demonstracyjna).", "success")
+        # Real pass: validate the submitted product/variant/quantity against
+        # the catalog before handing it to the cart helper. Invalid input never
+        # crashes — it flashes a Polish message and returns to the offer.
+        product_id = request.form.get("product_id", "").strip()
+        variant_id = request.form.get("variant_id", "").strip()
+        qty_raw = request.form.get("qty", "").strip()
+
+        try:
+            product = get_product(product_id)
+        except KeyError:
+            flash("Nieprawidłowy produkt.", "error")
+            return redirect(url_for("offer"))
+
+        try:
+            variant = get_variant(product_id, variant_id)
+        except KeyError:
+            flash("Nieprawidłowy wariant produktu.", "error")
+            return redirect(url_for("offer"))
+
+        try:
+            qty = int(qty_raw)
+        except (TypeError, ValueError):
+            flash("Ilość musi być liczbą całkowitą.", "error")
+            return redirect(url_for("offer"))
+
+        if qty < 1 or qty > MAX_QTY:
+            flash(f"Ilość musi być liczbą od 1 do {MAX_QTY}.", "error")
+            return redirect(url_for("offer"))
+
+        add_item(session, product_id, variant_id, qty)
+        flash(
+            f"Dodano do koszyka: {product['name']} — {variant['label']} × {qty}.",
+            "success",
+        )
         return redirect(url_for("offer"))
 
     @app.get("/koszyk")
