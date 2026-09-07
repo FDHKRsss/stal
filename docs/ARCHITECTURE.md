@@ -186,15 +186,20 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   the implemented stub rather than the planned state.
 - 2026-09-07 (architect): accepted **M2 -- stub** (35 tests green). `/` now renders `templates/index.html`;
   updated "What's in code" to record M2 -- stub and the new template files.
+- 2026-09-07 (architect): accepted **M3 -- stub** (49 tests green). Added `stal/catalog.py` (2 hardcoded
+  products, one variant each; `get_product`/`get_variant` raise `KeyError`) and `tests/test_catalog_stub.py`;
+  "What's in code" updated.
 
 ## What's in code (stubs vs real) — current status
 
-- **Implemented so far (Pass 1):** `M1 -- stub` and `M2 -- stub`.
+- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub` and `M3 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with two routes: `/` renders `index.html` (homepage stub) and
     `/health` returns `"ok"`.
   - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
     intentionally does **not** read the environment or a `.env` file.
+  - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
+    raise `KeyError` on unknown ids.
   - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks).
   - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
     assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury) and clearly marked as demo/stub.
@@ -202,8 +207,8 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
-    `tests/test_homepage_stub.py` — **35 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M3`–`M9`. `catalog.py`, `cart.py`,
+    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py` — **49 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M4`–`M9`. `cart.py`,
   `routes.py`, `static/`, the remaining templates (`shop.html`, `cart.html`, `confirmation.html`,
   `404.html`), `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the
   real-pass design.

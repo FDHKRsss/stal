@@ -56,7 +56,7 @@ current manual buying process, brainstorm about the assortment (screws/bolts, nu
 pipes, lengths 3 m / 6 m, quality variants) and a CTA to the offer page.
 
 ### M3 — Product catalog data (mock, no DB)
-- [ ] M3 -- stub
+- [x] M3 -- stub
 - [ ] M3 -- real
 
 Deliverable: `stal/catalog.py` — `PRODUCTS` list + lookup helpers (`get_product`, `get_variant`).
@@ -132,5 +132,8 @@ add/update/remove/merge/validation, and a full route flow
 - 2026-09-07 (architect): **M2 -- stub accepted** — 35 tests green (`pytest -q`). `templates/base.html` +
   `templates/index.html` added; GET `/` renders the homepage (Polish stub copy with the steel assortment and
   a "demonstracyjna" note). Plan, "What's in code" and the plan-state tests updated to record it.
-- Next action: implement **M3 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (architect): **M3 -- stub accepted** — 49 tests green (`pytest -q`). `stal/catalog.py` +
+  `tests/test_catalog_stub.py` added (2 hardcoded products, one variant each; `get_product`/`get_variant`
+  raise `KeyError`). Plan, "What's in code" and the plan-state tests updated to record it.
+- Next action: implement **M4 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.
