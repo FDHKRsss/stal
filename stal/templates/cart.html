@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Stal — koszyk (stub){% endblock %}
+
+{% block content %}
+<h1>Koszyk</h1>
+<p>Wersja demonstracyjna (stub) — podsumowanie zamówienia z wyborem sposobu płatności i miejsca dostawy.</p>
+
+<section>
+  <h2>Twoje produkty</h2>
+  <p>Koszyk jest pusty — w wersji demonstracyjnej przycisk „Dodaj do koszyka” nie zapisuje jeszcze pozycji.</p>
+  <p><strong>Razem do zapłaty: 0,00 zł</strong></p>
+  <form method="post" action="{{ url_for('update_cart') }}">
+    <button type="submit">Zaktualizuj koszyk</button>
+  </form>
+</section>
+
+<section>
+  <h2>Sposób płatności</h2>
+  <label><input type="radio" name="payment_method" value="przelew" checked> przelew bankowy (przedpłata)</label><br>
+  <label><input type="radio" name="payment_method" value="karta"> karta płatnicza online</label><br>
+  <label><input type="radio" name="payment_method" value="gotowka"> gotówka przy odbiorze</label><br>
+  <label><input type="radio" name="payment_method" value="odroczony"> przelew z odroczonym terminem (dla firm)</label>
+</section>
+
+<section>
+  <h2>Miejsce dostawy</h2>
+  <select name="delivery_method">
+    <option value="odbior">odbiór osobisty (magazyn)</option>
+    <option value="kurier">dostawa kurierem</option>
+    <option value="transport">dostawa transportem własnym</option>
+  </select>
+  <p><label>Adres dostawy: <input type="text" name="address" placeholder="ulica, kod pocztowy, miasto"></label></p>
+</section>
+
+<form method="post" action="{{ url_for('place_order') }}">
+  <button type="submit">Złóż zamówienie</button>
+</form>
+
+<p><a href="{{ url_for('offer') }}">Wróć do oferty</a></p>
+{% endblock %}

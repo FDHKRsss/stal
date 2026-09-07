@@ -84,7 +84,7 @@ Stub = functions returning fixed/empty data (no real session). Real = session-ba
 duplicate add, line totals and grand total, and a cart count helper.
 
 ### M6 — Summary / checkout page
-- [ ] M6 -- stub
+- [x] M6 -- stub
 - [ ] M6 -- real
 
 Deliverable: `templates/cart.html`; GET `/koszyk` + POST `/koszyk/aktualizuj`.
@@ -93,7 +93,7 @@ totals, per-line quantity update/remove forms, and the mocked payment-method + d
 (including an address field required when delivery is not "odbiór osobisty").
 
 ### M7 — Order confirmation (mocked)
-- [ ] M7 -- stub
+- [x] M7 -- stub
 - [ ] M7 -- real
 
 Deliverable: `templates/confirmation.html`; POST `/zamowienie` (GET redirects to `/koszyk`).
@@ -143,5 +143,15 @@ add/update/remove/merge/validation, and a full route flow
   with the full cart API as stubs (`get_cart`, `add_item`, `update_item`, `remove_item`, `clear_cart`,
   `cart_lines`, `cart_total`, `cart_count`) returning fixed/empty data and ignoring the `session`
   argument (no real session logic). Plan, "What's in code" and the plan-state tests updated to record it.
-- Next action: implement **M6 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (architect): **M6 -- stub accepted** — 102 tests green (`pytest -q`). `stal/templates/cart.html`
+  added; GET `/koszyk` renders the summary stub (empty-cart note + `0,00 zł` total, mocked payment-method
+  radios and delivery `<select>` plus an address field) and POST `/koszyk/aktualizuj` flashes a fixed demo
+  message then redirects back to `/koszyk`. Plan, "What's in code" and the plan-state tests updated to
+  record it.
+- 2026-09-07 (architect): **M7 -- stub accepted** — 119 tests green (`pytest -q`). `stal/templates/confirmation.html`
+  added; POST `/zamowienie` renders the static mocked confirmation ("Zamówienie przyjęte", demo order number
+  `ZAM-DEMO-0001`, `0,00 zł` total and a link back to the homepage) and GET `/zamowienie` redirects to
+  `/koszyk`; the cart page now posts a "Złóż zamówienie" form to `/zamowienie`. Plan, "What's in code" and
+  the plan-state tests updated to record it.
+- Next action: implement **M8 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.

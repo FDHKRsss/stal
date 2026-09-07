@@ -201,13 +201,26 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   `cart_total`, `cart_count`) returning fixed/empty data and ignoring the `session` argument (no real
   session logic). "What's in code" and the plan-state tests updated to record it.
 
+- 2026-09-07 (architect): accepted **M6 -- stub** (102 tests green). `stal/templates/cart.html` added;
+  GET `/koszyk` renders the summary stub (empty-cart note + `0,00 zł` total, mocked payment-method radios
+  and delivery `<select>` plus an address field) and POST `/koszyk/aktualizuj` flashes a fixed demo message
+  then redirects back to `/koszyk`. "What's in code" updated to record M6 -- stub as accepted.
+- 2026-09-07 (architect): accepted **M7 -- stub** (119 tests green). `stal/templates/confirmation.html` added;
+  POST `/zamowienie` renders the static mocked confirmation and GET `/zamowienie` redirects to `/koszyk`;
+  the cart page now posts a "Złóż zamówienie" form to `/zamowienie`. "What's in code" updated to record
+  M7 -- stub as accepted.
+
 ## What's in code (stubs vs real) — current status
 
-- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub` and `M5 -- stub`.
+- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
+  `M6 -- stub` and `M7 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
-  - `stal/__init__.py` — `create_app()` with four routes: `/` renders `index.html` (homepage stub),
+  - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage stub),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
-    redirects to `/oferta`, and `/health` returns `"ok"`.
+    redirects to `/oferta`, `GET /koszyk` renders `cart.html` (summary stub),
+    `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
+    `GET /zamowienie` redirects to `/koszyk`, `POST /zamowienie` renders `confirmation.html`
+    (mocked confirmation), and `/health` returns `"ok"`.
   - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
     intentionally does **not** read the environment or a `.env` file.
   - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
@@ -222,14 +235,23 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     CTA link to `/oferta`.
   - `stal/templates/shop.html` — offer stub (extends `base.html`): lists each catalog product's name + unit
     with a per-product "Dodaj do koszyka" form posting to `/oferta/dodaj`.
+  - `stal/templates/cart.html` — summary stub (extends `base.html`): an empty-cart note with a `0,00 zł`
+    total, mocked payment-method radios (przelew / karta / gotówka / odroczony termin), a mocked delivery
+    `<select>` (odbiór osobisty / kurier / transport własny) plus an address field, an "Zaktualizuj
+    koszyk" form posting to `update_cart`, a "Złóż zamówienie" form posting to `place_order`, and a link
+    back to the offer.
+  - `stal/templates/confirmation.html` — mocked order confirmation (extends `base.html`): a static
+    "Zamówienie przyjęte" heading, a demo order number `ZAM-DEMO-0001`, a `0,00 zł` total and a link back
+    to the homepage.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
     `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
-    `tests/test_cart_stub.py` — **78 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M6`–`M9`. `routes.py`, `static/`, the
-  remaining templates (`cart.html`, `confirmation.html`, `404.html`), `test_cart.py` and `test_routes.py`
+    `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py` —
+    **119 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M8`–`M9`. `routes.py`, `static/`, the
+  remaining template (`404.html`), `test_cart.py` and `test_routes.py`
   do not exist yet; they are described above as the real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
