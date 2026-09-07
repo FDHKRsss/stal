@@ -17,3 +17,5 @@ Non-negotiables:
 - Configurable `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` via env with sane defaults; never assume a fixed port
   is free. Env is read from `os.environ` only — no python-dotenv, `.env` is never auto-loaded.
 - `README.md` is owned by the goal / human gate — read only; put all plans/design/notes in `docs/`.
+- Two-pass build: Pass 1 ships each milestone as a stub (whole app clickable end-to-end); Pass 2 replaces
+  each with the real implementation. Stub code is intentional, not unfinished.

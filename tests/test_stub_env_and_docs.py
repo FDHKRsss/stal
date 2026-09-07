@@ -1,15 +1,15 @@
-"""Tests for the M1/M2/M3 stub environment handling and doc polish items.
+"""Tests for the M1/M2/M3/M4 stub environment handling and doc polish items.
 
 These validate the *current* stub deliverables precisely:
 - the stub config is static (it must NOT read the process environment or a
   `.env` file; env-driven config arrives in the real pass),
 - `.env.example` tells the truth about that stub behavior,
-- `PLAN.md` marks exactly `M1 -- stub`, `M2 -- stub` and `M3 -- stub` done,
-  leaves every other milestone unchecked, and points the next action at
-  `M4 -- stub`,
+- `PLAN.md` marks exactly `M1 -- stub`, `M2 -- stub`, `M3 -- stub` and
+  `M4 -- stub` done, leaves every other milestone unchecked, and points the
+  next action at `M5 -- stub`,
 - `ARCHITECTURE.md`'s "What's in code" section describes the *implemented*
-  state (M1 + M2 + M3 stubs), and its implemented / not-yet lists match the
-  disk.
+  state (M1 + M2 + M3 + M4 stubs), and its implemented / not-yet lists match
+  the disk.
 """
 
 from pathlib import Path
@@ -89,33 +89,37 @@ def test_env_example_does_not_instruct_setting_or_exporting_env_vars():
 # --- `PLAN.md` milestone state -------------------------------------------
 
 
-def test_plan_marks_m1_m2_and_m3_stub_done():
+def test_plan_marks_m1_through_m4_stub_done():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
     lines = content.splitlines()
     checked = [ln.strip() for ln in lines if ln.strip().startswith("- [x]")]
-    assert checked == ["- [x] M1 -- stub", "- [x] M2 -- stub", "- [x] M3 -- stub"]
+    assert checked == [
+        "- [x] M1 -- stub",
+        "- [x] M2 -- stub",
+        "- [x] M3 -- stub",
+        "- [x] M4 -- stub",
+    ]
 
-    # Count fix: the M3 acceptance note must say 49 tests green (not 35),
-    # while the historical M1/M2 notes keep their original counts.
+    # Counts: each acceptance note records the exact green count at that point,
+    # while the historical M1/M2/M3 notes keep their original counts.
+    assert "**M4 -- stub accepted** — 65 tests green" in content
     assert "**M3 -- stub accepted** — 49 tests green" in content
     assert "**M2 -- stub accepted** — 35 tests green" in content
     assert "**M1 -- stub accepted** — 23 tests green" in content
     assert "30 tests green" not in content
 
 
-def test_plan_m1_real_and_remaining_milestones_still_unchecked():
+def test_plan_real_steps_and_remaining_milestones_still_unchecked():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
-    assert "- [ ] M1 -- real" in content
-    assert "- [ ] M2 -- real" in content
-    assert "- [ ] M3 -- real" in content
-    for n in range(4, 10):
-        assert f"- [ ] M{n} -- stub" in content
+    for n in range(1, 10):
         assert f"- [ ] M{n} -- real" in content
+    for n in range(5, 10):
+        assert f"- [ ] M{n} -- stub" in content
 
 
-def test_plan_next_action_points_to_m4_stub():
+def test_plan_next_action_points_to_m5_stub():
     content = (ROOT / "docs" / "PLAN.md").read_text(encoding="utf-8")
-    assert "Next action: implement **M4 -- stub**" in content
+    assert "Next action: implement **M5 -- stub**" in content
 
 
 # --- `ARCHITECTURE.md` "What's in code" accuracy --------------------------
@@ -126,17 +130,20 @@ def _whats_in_code_section():
     return arch.split("## What's in code", 1)[1]
 
 
-def test_architecture_records_m1_m2_and_m3_stub_as_implemented():
+def test_architecture_records_m1_through_m4_stub_as_implemented():
     section = _whats_in_code_section()
     assert "Implemented so far (Pass 1):" in section
     assert "`M1 -- stub`" in section
     assert "`M2 -- stub`" in section
     assert "`M3 -- stub`" in section
-    # The routes are described as rendering the real template (not fixed text).
+    assert "`M4 -- stub`" in section
+    # The routes are described as rendering the real templates (not fixed text).
     assert "`/` renders `index.html`" in section
+    assert "`/oferta` renders `shop.html`" in section
     assert "`/health` returns" in section
-    # Count fix: the test bullet must say 49 passing, not the stale 35.
-    assert "**49 passing**" in section
+    # Count fix: the test bullet must say the current total, not a stale count.
+    assert "**65 passing**" in section
+    assert "**49 passing**" not in section
     assert "**35 passing**" not in section
 
 
@@ -149,6 +156,7 @@ def test_architecture_lists_implemented_files_that_exist_on_disk():
         "stal/catalog.py": "stal/catalog.py",
         "stal/templates/base.html": "stal/templates/base.html",
         "stal/templates/index.html": "stal/templates/index.html",
+        "stal/templates/shop.html": "stal/templates/shop.html",
         "requirements.txt": "requirements.txt",
         "requirements-dev.txt": "requirements-dev.txt",
         "pytest.ini": "pytest.ini",
@@ -165,13 +173,14 @@ def test_architecture_marks_unimplemented_files_as_not_yet_existing():
     section = _whats_in_code_section()
     assert "Not implemented yet" in section
     not_yet = section.split("Not implemented yet", 1)[1]
-    # `catalog.py` is now implemented: it must no longer be listed as not-yet.
+    # `catalog.py` and `shop.html` are now implemented: neither may still be
+    # listed as not-yet.
     assert "catalog.py" not in not_yet
+    assert "shop.html" not in not_yet
     unimplemented = {
         "cart.py": "stal/cart.py",
         "routes.py": "stal/routes.py",
         "static/": "stal/static",
-        "shop.html": "stal/templates/shop.html",
         "cart.html": "stal/templates/cart.html",
         "confirmation.html": "stal/templates/confirmation.html",
         "404.html": "stal/templates/404.html",
@@ -183,14 +192,16 @@ def test_architecture_marks_unimplemented_files_as_not_yet_existing():
         assert not (ROOT / rel).exists(), f"{rel} listed as not-yet but exists on disk"
 
 
-def test_architecture_has_m3_stub_acceptance_note():
+def test_architecture_has_stub_acceptance_notes():
     arch = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
+    assert "accepted **M4 -- stub**" in arch
+    assert "accepted **M4 -- stub** (65 tests green)" in arch
     assert "accepted **M3 -- stub**" in arch
-    # Count fix: M3 review note says 49 tests green; the historical M1/M2
-    # notes keep their counts, and no stale 30/35 strings remain.
     assert "accepted **M3 -- stub** (49 tests green)" in arch
     assert "accepted **M2 -- stub** (35 tests green)" in arch
     assert "accepted **M1 -- stub** (23 tests green)" in arch
+    # No stale green/passing counts remain from earlier milestones.
     assert "30 tests green" not in arch
     assert "30 passing" not in arch
     assert "35 passing" not in arch
+    assert "49 passing" not in arch

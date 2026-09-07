@@ -65,7 +65,7 @@ Stub = 2 hardcoded products, one variant each. Real = a realistic catalog of ~8�
 quality variants), each with `id`, `name`, `category`, `description`, `unit`, and `variants` (id, label, price).
 
 ### M4 — Offer / shop page
-- [ ] M4 -- stub
+- [x] M4 -- stub
 - [ ] M4 -- real
 
 Deliverable: `templates/shop.html`; GET `/oferta` + POST `/oferta/dodaj`.
@@ -135,5 +135,9 @@ add/update/remove/merge/validation, and a full route flow
 - 2026-09-07 (architect): **M3 -- stub accepted** — 49 tests green (`pytest -q`). `stal/catalog.py` +
   `tests/test_catalog_stub.py` added (2 hardcoded products, one variant each; `get_product`/`get_variant`
   raise `KeyError`). Plan, "What's in code" and the plan-state tests updated to record it.
-- Next action: implement **M4 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (architect): **M4 -- stub accepted** — 65 tests green (`pytest -q`). `templates/shop.html`
+  added; GET `/oferta` renders the offer stub (each product's name + unit with a per-product "Dodaj do
+  koszyka" form posting to `/oferta/dodaj`) and POST `/oferta/dodaj` flashes a fixed demo message then
+  redirects back to `/oferta`. Plan, "What's in code" and the plan-state tests updated to record it.
+- Next action: implement **M5 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.

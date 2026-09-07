@@ -1,7 +1,8 @@
 """Flask application factory for the steel mock e-shop."""
 
-from flask import Flask, render_template
+from flask import Flask, flash, redirect, render_template, url_for
 
+from stal.catalog import PRODUCTS
 from stal.config import Config
 
 
@@ -13,6 +14,17 @@ def create_app():
     @app.get("/")
     def index():
         return render_template("index.html")
+
+    @app.get("/oferta")
+    def offer():
+        return render_template("shop.html", products=PRODUCTS)
+
+    @app.post("/oferta/dodaj")
+    def add_to_cart():
+        # Stub: the route ignores the submitted form and flashes a fixed
+        # message so the whole add-to-cart flow is clickable end-to-end.
+        flash("Dodano do koszyka (wersja demonstracyjna).", "success")
+        return redirect(url_for("offer"))
 
     @app.get("/health")
     def health():

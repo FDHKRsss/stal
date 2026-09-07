@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Stal — oferta (stub){% endblock %}
+
+{% block content %}
+<h1>Oferta</h1>
+<p>Wersja demonstracyjna (stub) — wybierz produkt i dodaj go do koszyka.</p>
+
+<ul>
+  {% for product in products %}
+    <li>
+      <strong>{{ product.name }}</strong>
+      <span>({{ product.unit }})</span>
+      <form method="post" action="{{ url_for('add_to_cart') }}">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <button type="submit">Dodaj do koszyka</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

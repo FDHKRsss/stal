@@ -189,29 +189,40 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
 - 2026-09-07 (architect): accepted **M3 -- stub** (49 tests green). Added `stal/catalog.py` (2 hardcoded
   products, one variant each; `get_product`/`get_variant` raise `KeyError`) and `tests/test_catalog_stub.py`;
   "What's in code" updated.
+- 2026-09-07 (tester): **M4 -- stub implemented.** `/oferta` renders `templates/shop.html`
+  (product names + units, per-product "Dodaj do koszyka" form) and `POST /oferta/dodaj` flashes a fixed demo
+  message and redirects back to `/oferta`; `base.html` now renders flash messages and `index.html` links to
+  `/oferta`. "What's in code" and the doc-state tests updated to match.
+- 2026-09-07 (architect): accepted **M4 -- stub** (65 tests green). `/oferta` renders `shop.html` with a
+  per-product add-to-cart form, and `POST /oferta/dodaj` flashes a fixed demo message then redirects back.
+  "What's in code" updated to record M4 -- stub as accepted.
 
 ## What's in code (stubs vs real) — current status
 
-- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub` and `M3 -- stub`.
+- **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub` and `M4 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
-  - `stal/__init__.py` — `create_app()` with two routes: `/` renders `index.html` (homepage stub) and
-    `/health` returns `"ok"`.
+  - `stal/__init__.py` — `create_app()` with four routes: `/` renders `index.html` (homepage stub),
+    `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
+    redirects to `/oferta`, and `/health` returns `"ok"`.
   - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
     intentionally does **not** read the environment or a `.env` file.
   - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
     raise `KeyError` on unknown ids.
-  - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks).
+  - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks) that
+    renders flashed messages.
   - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
-    assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury) and clearly marked as demo/stub.
+    assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury), clearly marked as demo/stub, with a
+    CTA link to `/oferta`.
+  - `stal/templates/shop.html` — offer stub (extends `base.html`): lists each catalog product's name + unit
+    with a per-product "Dodaj do koszyka" form posting to `/oferta/dodaj`.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
-    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py` — **49 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M4`–`M9`. `cart.py`,
-  `routes.py`, `static/`, the remaining templates (`shop.html`, `cart.html`, `confirmation.html`,
-  `404.html`), `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the
-  real-pass design.
+    `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py` — **65 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M5`–`M9`. `cart.py`,
+  `routes.py`, `static/`, the remaining templates (`cart.html`, `confirmation.html`, `404.html`),
+  `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.
