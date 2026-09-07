@@ -217,15 +217,15 @@ def test_plan_marks_m6_real_done():
 
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    # M6 -- real is now done; M8 -- real is parked this round (reported green
-    # but still the stub); M9 -- real is still an untouched future step.
+    # M6 and M9 -- real are now done; M8 -- real is parked this round (reported
+    # green but still the stub).
     assert "- [x] M6 -- real" in content
+    assert "- [x] M9 -- real" in content
     assert "- [~] M8 -- real" in content
-    assert "- [ ] M9 -- real" in content
 
 
-def test_plan_next_action_points_to_m9_real():
-    assert "Next action: implement **M9 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m8_real():
+    assert "Next action: un-park and implement **M8 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -256,6 +256,10 @@ def test_plan_has_m7_real_acceptance_note():
     assert "M7 -- real accepted" in _plan_text()
 
 
+def test_plan_has_m9_real_acceptance_note():
+    assert "M9 -- real accepted" in _plan_text()
+
+
 def test_architecture_config_described_as_env_driven():
     arch = _arch_text()
     section = arch.split("## What's in code", 1)[1]
@@ -283,9 +287,9 @@ def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     # Routes live in the app factory (__init__.py), not a separate routes.py module.
     assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
-    # M6 -- real and M7 -- real are now done, so only M8/M9 remain.
-    for n in (8, 9):
-        assert f"M{n} -- real" in not_yet
+    # M6, M7 and M9 -- real are now done, so only M8 -- real remains (parked).
+    assert "M8 -- real" in not_yet
+    assert "M9 -- real" not in not_yet
     assert "M6 -- real" not in not_yet
     assert "M7 -- real" not in not_yet
 
@@ -316,6 +320,10 @@ def test_architecture_has_m6_real_acceptance_note():
 
 def test_architecture_has_m7_real_acceptance_note():
     assert "accepted **M7 -- real**" in _arch_text()
+
+
+def test_architecture_has_m9_real_acceptance_note():
+    assert "accepted **M9 -- real**" in _arch_text()
 
 
 def test_architecture_offer_described_as_real():
@@ -358,3 +366,13 @@ def test_architecture_confirmation_described_as_real():
     assert "ZAM-DEMO-0001" not in section
     assert "test_confirmation.py" in section
     assert "test_confirmation_stub.py" not in section
+
+
+def test_architecture_routes_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # M9 -- real is delivered: the route suite must be described as the real
+    # route-flow & robustness suite, not a one-test stub smoke test.
+    assert "stub smoke test" not in section
+    assert "route-flow & robustness" in section
+    assert "test_routes.py" in section

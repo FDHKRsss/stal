@@ -112,7 +112,7 @@ good enough to show the owner.
 
 ### M9 — Tests & robustness
 - [x] M9 -- stub
-- [ ] M9 -- real
+- [x] M9 -- real
 
 Deliverable: `tests/test_cart.py`, `tests/test_routes.py`, `tests/conftest.py` (Flask test client).
 Stub = one smoke test (app factory creates app; `/health` returns 200). Real = real-behavior tests: cart
@@ -239,5 +239,11 @@ add/update/remove/merge/validation, and a full route flow
   `product-card`, `cart-lines`, `checkout-form`, `order-lines`, `demo-note`) but the CSS does not
   style them yet. Parking `M8 -- real` as `- [~]` so the coder moves on to M9 instead of re-trying
   the same stuck item.
-- Next action: implement **M9 -- real** (M8 -- real is parked this round — see the note above),
-  committing on each milestone acceptance.
+- 2026-09-07 (coder): **M9 -- real accepted** — 281 tests green (`pytest -q`).
+  `tests/test_routes.py` now carries the real route-flow & robustness suite
+  (`test_full_checkout_flow_end_to_end`,
+  `test_invalid_add_never_crashes_and_redirects_to_the_offer`,
+  `test_tampered_session_cookie_behaves_like_an_empty_cart`, `test_wrong_http_method_returns_405`)
+  and `tests/test_cart.py` the real cart suite (both wired through the Flask test client); the
+  plan, "What's in code" and the plan-state tests now record M9 -- real as delivered.
+- Next action: un-park and implement **M8 -- real** (styling) — the only remaining Pass 2 milestone.

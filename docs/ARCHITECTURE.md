@@ -274,6 +274,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   pins the stub; the 250 green tests are the stub suite, not M8 -- real. Parked `M8 -- real` as
   `- [~]` so the coder moves on to M9. The templates already carry the semantic classes the real
   stylesheet will style.
+- 2026-09-07 (coder): accepted **M9 -- real** (281 tests green). `tests/test_routes.py` carries the
+  real route-flow & robustness suite and `tests/test_cart.py` the real cart suite; "What's in code"
+  and the plan-state tests now record M9 -- real as delivered.
 
 
 ## What's in code (stubs vs real) — current status
@@ -281,7 +284,7 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
 - **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`, `M4 -- real`, `M5 -- real`,
-  `M6 -- real`, `M7 -- real`.
+  `M6 -- real`, `M7 -- real`, `M9 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
     `/oferta` renders `shop.html` (real offer), `POST /oferta/dodaj` validates product/variant/quantity
@@ -336,14 +339,15 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `tests/test_cart.py` — real cart suite: unit tests for add/merge/update/remove/clear/enrich/totals/
     count plus quantity and product/variant validation, and an end-to-end section proving the real cart
     is wired into `POST /oferta/dodaj` and the nav badge.
-  - `tests/test_routes.py` — stub smoke test: `create_app()` builds a Flask app and `/health` answers 200
-    through the Flask test client.
+  - `tests/test_routes.py` — real route-flow & robustness suite: the full client-driven journey
+    `/` → `/oferta` → add → `/koszyk` → update → `/zamowienie`, plus wrong-HTTP-method (405), unknown
+    route (Polish 404), invalid add/order payloads and tampered-session-cookie degradation to an empty
+    cart.
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
     `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
     `tests/test_cart_page.py`, `tests/test_confirmation.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **250 passing**.
-- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling) and `M9 -- real`
-  (tests & robustness).
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **281 passing**.
+- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling; parked this round).
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.
