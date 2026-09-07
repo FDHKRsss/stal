@@ -199,14 +199,18 @@ def test_plan_marks_m2_real_done():
     assert "- [x] M2 -- real" in _plan_text()
 
 
+def test_plan_marks_m3_real_done():
+    assert "- [x] M3 -- real" in _plan_text()
+
+
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    for n in range(3, 10):
+    for n in range(4, 10):
         assert f"- [ ] M{n} -- real" in content
 
 
-def test_plan_next_action_points_to_m3_real():
-    assert "Next action: implement **M3 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m4_real():
+    assert "Next action: implement **M4 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -217,11 +221,25 @@ def test_plan_has_m2_real_acceptance_note():
     assert "M2 -- real accepted" in _plan_text()
 
 
+def test_plan_has_m3_real_acceptance_note():
+    assert "M3 -- real accepted" in _plan_text()
+
+
 def test_architecture_config_described_as_env_driven():
     arch = _arch_text()
     section = arch.split("## What's in code", 1)[1]
     assert "os.environ" in section
     assert "env-driven" in section
+
+
+def test_architecture_catalog_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # The real M3 catalog landed; the "What's in code" section must describe it
+    # and must no longer name the replaced stub test.
+    assert "9 steel products" in section
+    assert "test_catalog.py" in section
+    assert "test_catalog_stub.py" not in section
 
 
 def test_architecture_404_is_implemented_and_routes_still_missing():
@@ -241,3 +259,7 @@ def test_architecture_has_m1_real_acceptance_note():
 
 def test_architecture_has_m2_real_acceptance_note():
     assert "accepted **M2 -- real**" in _arch_text()
+
+
+def test_architecture_has_m3_real_acceptance_note():
+    assert "accepted **M3 -- real**" in _arch_text()

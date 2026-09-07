@@ -21,6 +21,11 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
   `test_homepage.py`) — not just editing the template — and updating ARCHITECTURE's "What's in code"
   test-file list (which still names the old `*_stub.py`) in the same commit, or the stub test goes red while
   docs drift.
+- A green `pytest -q` does **not** mean the current `-- real` milestone is delivered. Until its stub test is
+  replaced, the suite still pins the stub — M3 -- real was reported "green" at 149 tests while
+  `tests/test_catalog_stub.py` still asserted `len(PRODUCTS) == 2` and no real catalog had landed. Before
+  marking a `-- real` item done, confirm the real implementation actually exists in the tree (not just that
+  the run is green).
 - Commit every accepted milestone in one go (docs + code + the `test_env_and_docs.py` snapshot). Leaving
   accepted work uncommitted in the working tree (as after M8 -- stub, so M9 -- stub + M1 -- real sat there)
   makes later turns re-verify and re-sync already-finished work as if it were drift — wasted effort.

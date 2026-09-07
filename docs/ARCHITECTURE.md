@@ -230,11 +230,21 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   section and a CTA to `/oferta`); `tests/test_homepage.py` replaces `tests/test_homepage_stub.py` and
   `tests/test_skeleton.py` now asserts the real copy. "What's in code" and the doc-state tests updated.
 
+- 2026-09-07 (architect): **M3 -- real not delivered this round** — `stal/catalog.py` remains the
+  2-product stub and `stal/routes.py` is still absent; the 149 green tests are the stub suite, not
+  M3 -- real. No code change to record — the "What's in code" section still reflects the state.
+
+- 2026-09-07 (coder): accepted **M3 -- real** (161 tests green). `stal/catalog.py` now carries the real
+  catalog of 9 steel products (4 fasteners sold per `opak. 100 szt.` with `ocynkowana`/`nierdzewna A2`
+  variants; 5 profiles sold per `sztanga` with 3 m / 6 m lengths and `S235JR`/`nierdzewna` quality) plus
+  `get_product`/`get_variant` raising `KeyError`. `tests/test_catalog.py` replaces
+  `tests/test_catalog_stub.py`. "What's in code" and the doc-state tests updated.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
-- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`.
+- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
@@ -246,7 +256,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     registered (404 → `404.html`, 500 → a safe Polish message).
   - `stal/config.py` — env-driven `Config` reading `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` from
     `os.environ` with sane defaults; no dotenv/`.env` auto-loading.
-  - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
+  - `stal/catalog.py` — real mock catalog: 9 steel products (4 fasteners sold per `opak. 100 szt.` with
+    `ocynkowana`/`nierdzewna A2` quality variants; 5 profiles — kątownik, płaskownik, pręt, rura, ceownik —
+    sold per `sztanga` with 3 m / 6 m lengths and `S235JR`/`nierdzewna` quality); `get_product`/`get_variant`
     raise `KeyError` on unknown ids.
   - `stal/cart.py` — cart helpers (stub): `get_cart`, `add_item`, `update_item`, `remove_item`,
     `clear_cart`, `cart_lines`, `cart_total` and `cart_count` all return fixed/empty data and ignore the
@@ -279,9 +291,9 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `tests/test_routes.py` — stub smoke test: `create_app()` builds a Flask app and `/health` answers 200
     through the Flask test client.
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
-    `tests/test_homepage.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
+    `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer_stub.py`,
     `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **149 passing**.
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **161 passing**.
 - **Not implemented yet (still to do in Pass 2):** `routes.py` does not exist yet; it is described above as
   the real-pass design.
 

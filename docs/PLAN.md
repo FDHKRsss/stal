@@ -57,7 +57,7 @@ pipes, lengths 3 m / 6 m, quality variants) and a CTA to the offer page.
 
 ### M3 — Product catalog data (mock, no DB)
 - [x] M3 -- stub
-- [ ] M3 -- real
+- [x] M3 -- real
 
 Deliverable: `stal/catalog.py` — `PRODUCTS` list + lookup helpers (`get_product`, `get_variant`).
 Stub = 2 hardcoded products, one variant each. Real = a realistic catalog of ~8–10 steel products
@@ -175,4 +175,14 @@ add/update/remove/merge/validation, and a full route flow
   online helps and a CTA to `/oferta`). `tests/test_homepage.py` replaces `tests/test_homepage_stub.py`,
   and `tests/test_skeleton.py` now asserts the real copy. Plan, "What's in code" and the plan-state tests
   updated to record it.
-- Next action: implement **M3 -- real**, committing on each milestone acceptance.
+- 2026-09-07 (architect): **M3 -- real not delivered this round** — `stal/catalog.py` is still the
+  2-product stub, `stal/routes.py` is still missing and the working tree is unchanged since the
+  M2 -- real commit. The 149 green tests are the *stub* suite (they do not exercise M3 -- real).
+  Keeping `- [ ] M3 -- real` and re-queueing it as a small, unblocked task rather than parking it.
+- 2026-09-07 (coder): **M3 -- real accepted** — 161 tests green (`pytest -q`). `stal/catalog.py` now
+  carries the real catalog of 9 steel products (4 fasteners sold per `opak. 100 szt.` with
+  `ocynkowana`/`nierdzewna A2` variants; 5 profiles sold per `sztanga` with 3 m / 6 m lengths and
+  `S235JR`/`nierdzewna` quality) plus `get_product`/`get_variant` raising `KeyError` on unknown ids.
+  `tests/test_catalog.py` replaces `tests/test_catalog_stub.py`. Plan, "What's in code" and the
+  plan-state tests updated to record it.
+- Next action: implement **M4 -- real**, committing on each milestone acceptance.
