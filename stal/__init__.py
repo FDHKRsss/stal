@@ -28,8 +28,8 @@ def create_app():
 
     @app.context_processor
     def inject_cart_count():
-        # The shared nav badge is wired to the documented cart helper; until
-        # the session-backed cart lands (M5 -- real) it returns 0.
+        # The shared nav badge renders the real cart unit count from the
+        # session-backed cart (M5 -- real).
         return {"cart_count": cart_count(session)}
 
     @app.get("/")

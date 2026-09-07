@@ -75,7 +75,7 @@ cards with a variant dropdown and a quantity dropdown, server-side validation on
 
 ### M5 — Cart logic (session, no DB)
 - [x] M5 -- stub
-- [ ] M5 -- real
+- [x] M5 -- real
 
 Deliverable: `stal/cart.py` — pure helpers over `session`: `get_cart`, `add_item`, `update_item`,
 `remove_item`, `clear_cart`, `cart_lines`, `cart_total`.
@@ -193,4 +193,11 @@ add/update/remove/merge/validation, and a full route flow
   "What's in code" and the plan-state tests updated to record it.
 - 2026-09-07 (architect): committed **M4 -- real** (177 tests green). Reconciled the `routes.py`
   design drift in ARCHITECTURE: routes live in `stal/__init__.py` (no separate `routes.py`).
-- Next action: implement **M5 -- real**, committing on each milestone acceptance.
+- 2026-09-07 (coder): **M5 -- real accepted** — 220 tests green (`pytest -q`). `stal/cart.py` now
+  implements the real session-backed cart (`get_cart`, `add_item`, `update_item`, `remove_item`,
+  `clear_cart`, `cart_lines`, `cart_total`, `cart_count`) with quantity validation (int, `1..MAX_QTY`),
+  unknown product/variant rejection, merge-on-duplicate capped at `MAX_QTY`, line totals and the
+  nav-badge unit count; `POST /oferta/dodaj` and the shared nav badge now use the real helper.
+  `tests/test_cart.py` replaces `tests/test_cart_stub.py`. Plan, "What's in code" and the
+  plan-state tests updated to record it.
+- Next action: implement **M6 -- real**, committing on each milestone acceptance.

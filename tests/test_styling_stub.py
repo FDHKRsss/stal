@@ -8,7 +8,7 @@ These validate the current stub deliverable only:
   block, a stylesheet link and a footer,
 - the nav/footer and the `0` cart badge render on every page,
 - the cart badge is wired through a context processor to the documented
-  `cart_count(session)` helper (which returns `0` in the stub).
+  `cart_count(session)` helper (the real session-backed unit count).
 """
 
 from pathlib import Path

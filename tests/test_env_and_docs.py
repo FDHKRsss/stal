@@ -207,14 +207,18 @@ def test_plan_marks_m4_real_done():
     assert "- [x] M4 -- real" in _plan_text()
 
 
+def test_plan_marks_m5_real_done():
+    assert "- [x] M5 -- real" in _plan_text()
+
+
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    for n in range(5, 10):
+    for n in range(6, 10):
         assert f"- [ ] M{n} -- real" in content
 
 
-def test_plan_next_action_points_to_m5_real():
-    assert "Next action: implement **M5 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m6_real():
+    assert "Next action: implement **M6 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -231,6 +235,10 @@ def test_plan_has_m3_real_acceptance_note():
 
 def test_plan_has_m4_real_acceptance_note():
     assert "M4 -- real accepted" in _plan_text()
+
+
+def test_plan_has_m5_real_acceptance_note():
+    assert "M5 -- real accepted" in _plan_text()
 
 
 def test_architecture_config_described_as_env_driven():
@@ -260,7 +268,7 @@ def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     # Routes live in the app factory (__init__.py), not a separate routes.py module.
     assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
-    for n in range(5, 10):
+    for n in range(6, 10):
         assert f"M{n} -- real" in not_yet
 
 
@@ -280,6 +288,10 @@ def test_architecture_has_m4_real_acceptance_note():
     assert "accepted **M4 -- real**" in _arch_text()
 
 
+def test_architecture_has_m5_real_acceptance_note():
+    assert "accepted **M5 -- real**" in _arch_text()
+
+
 def test_architecture_offer_described_as_real():
     arch = _arch_text()
     section = arch.split("## What's in code", 1)[1]
@@ -288,3 +300,14 @@ def test_architecture_offer_described_as_real():
     assert "offer stub" not in section
     assert "test_offer.py" in section
     assert "test_offer_stub.py" not in section
+
+
+def test_architecture_cart_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # The real M5 cart landed; the "What's in code" section must describe it
+    # and must no longer name the replaced stub test.
+    assert "cart helpers (stub)" not in section
+    assert "session-backed cart" in section
+    assert "test_cart.py" in section
+    assert "test_cart_stub.py" not in section

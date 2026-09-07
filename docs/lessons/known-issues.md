@@ -5,31 +5,27 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
 - Flask session cookies: an invalid/tampered signature yields an **empty session** (never a 400), and
   oversized cookies (~4 KB+) are silently dropped by browsers. Treat a bad cookie as an empty cart in both
   code and docs — don't assume Flask raises an error.
-- Docs must describe the *implemented* (current-pass) behavior, not the planned behavior, and `PLAN.md`
-  checkboxes must match accepted work. (Drift seen: `.env.example` claimed env-driven config the stub lacks
-  and implied `.env` auto-loading; the M1 checkbox was left unticked despite the work being done.)
-- `tests/test_env_and_docs.py` pins the exact `PLAN.md`/`ARCHITECTURE.md` snapshot: milestone checkbox
-  state, the "Next action" line, acceptance notes, and a few specific "What's in code" strings
-  (`os.environ`/`env-driven`, `404.html` implemented, `routes.py` still missing). Closing a milestone,
-  adding an acceptance note, or flipping a file from "not yet" to implemented therefore requires updating
-  those doc-state tests and the docs they assert against in the same commit, or the suite fails and blocks
-  the milestone. (Bit us on M2 — checkboxes; M4 — `shop.html`; M8 — `style.css`; and M1 -- real — docs still
-  held the pre-real snapshot, so 6 tests went red.)
-- Pass 2 replaces each stub milestone's matching `tests/test_*_stub.py`, which pins the stub's exact
-  copy/markers (e.g. `test_homepage_stub.py` asserted `<title>… (stub)</title>` and the string `stub`).
-  Implementing the real version means renaming/rewriting that test (`test_homepage_stub.py` →
-  `test_homepage.py`) — not just editing the template — and updating ARCHITECTURE's "What's in code"
-  test-file list (which still names the old `*_stub.py`) in the same commit, or the stub test goes red while
-  docs drift.
-- Replacing a stub with its real version can also break *other* milestones' tests that pinned the stub's
-  transient copy/markers (e.g. `test_styling_stub.py` asserted the `/oferta/dodaj` flash; M4 -- real removed
-  it, so the assertion was re-pointed to `/koszyk/aktualizuj`). Before marking a stub→real milestone done,
-  grep the test suite for references to the old behavior and update them in the same commit.
+
+- `tests/test_env_and_docs.py` pins the exact `PLAN.md`/`ARCHITECTURE.md` snapshot (milestone checkboxes,
+  the "Next action" line, acceptance notes, specific "What's in code" strings). Docs must describe the
+  *implemented* state, not the planned state, and code + docs + that snapshot test must land in **one
+  commit** (and be committed immediately — uncommitted accepted work gets re-verified as drift). Editing
+  docs without the test turns those tests red; merging `-- real` code without the docs leaves the suite
+  **green** (the test asserts docs, not code), so only a manual doc-vs-tree diff or the critic catches the
+  stale stub docs. (Bit us on M2/M4/M8/M1 -- real, and on M5 -- real — merged at 216 green while
+  `cart.py` was still documented as a stub.)
+
+- A `-- real` merge replaces a stub, and stale references to the stub linger beyond the code: the matching
+  `tests/test_*_stub.py` must be renamed/rewritten and ARCHITECTURE's "What's in code" test-file list
+  updated; *other* tests may pin the stub's transient markers (`test_styling_stub.py` asserted the
+  `/oferta/dodaj` flash); and code comments/docstrings can still claim stub behavior (`inject_cart_count`
+  said the badge "returns 0 until M5 -- real"). Before marking a stub→real milestone done, grep the whole
+  tree for `stub`/old markers and fix them in the same commit.
+
 - A green `pytest -q` does **not** mean the current `-- real` milestone is delivered. Until its stub test is
   replaced, the suite still pins the stub — M3 -- real was reported "green" at 149 tests while
-  `tests/test_catalog_stub.py` still asserted `len(PRODUCTS) == 2` and no real catalog had landed. Before
-  marking a `-- real` item done, confirm the real implementation actually exists in the tree (not just that
-  the run is green).
-- Commit every accepted milestone in one go (docs + code + the `test_env_and_docs.py` snapshot). Leaving
-  accepted work uncommitted in the working tree (as after M8 -- stub, so M9 -- stub + M1 -- real sat there)
-  makes later turns re-verify and re-sync already-finished work as if it were drift — wasted effort.
+  `tests/test_catalog_stub.py` still asserted `len(PRODUCTS) == 2`. Confirm the real implementation exists
+  in the tree before marking it done.
+
+- Routes live in `stal/__init__.py` (the app factory), not a separate `routes.py` and not blueprints —
+  earlier notes wrongly treated `routes.py` as a required deliverable. Don't create or expect `routes.py`.
