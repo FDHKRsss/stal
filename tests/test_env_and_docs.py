@@ -217,15 +217,15 @@ def test_plan_marks_m6_real_done():
 
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    # M6 and M9 -- real are now done; M8 -- real is parked this round (reported
-    # green but still the stub).
+    # M6 and M9 -- real are now done; M8 -- real is re-queued (un-parked) and
+    # still the stub.
     assert "- [x] M6 -- real" in content
     assert "- [x] M9 -- real" in content
-    assert "- [~] M8 -- real" in content
+    assert "- [ ] M8 -- real" in content
 
 
 def test_plan_next_action_points_to_m8_real():
-    assert "Next action: un-park and implement **M8 -- real**" in _plan_text()
+    assert "Next action: implement **M8 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -287,7 +287,7 @@ def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     # Routes live in the app factory (__init__.py), not a separate routes.py module.
     assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
-    # M6, M7 and M9 -- real are now done, so only M8 -- real remains (parked).
+    # M6, M7 and M9 -- real are now done, so only M8 -- real remains (re-queued).
     assert "M8 -- real" in not_yet
     assert "M9 -- real" not in not_yet
     assert "M6 -- real" not in not_yet

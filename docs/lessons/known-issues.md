@@ -32,7 +32,7 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
 - Routes live in `stal/__init__.py` (the app factory), not a separate `routes.py` and not blueprints —
   earlier notes wrongly treated `routes.py` as a required deliverable. Don't create or expect `routes.py`.
 
-- Milestones are not always finished in order: M7 -- real landed while M6 -- real was still parked, so it
-  had to minimally wire `cart.html`'s checkout form to POST `/zamowienie` while the rest of the cart page
-  stayed the stub. That edit is load-bearing — whoever finishes M6 -- real must preserve the `/zamowienie`
-  form and re-run the M7 confirmation tests.
+- **`- [~]` means PARKED, not pending.** A coder must skip a parked milestone and report "nothing to
+  implement" — do not re-attempt or un-park it (only the auditor/architect un-parks it back to `- [ ]`).
+  When the only remaining item is parked (e.g. M8 -- real), doing nothing is the correct outcome, not a
+  signal to invent work.

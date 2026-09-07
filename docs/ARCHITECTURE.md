@@ -286,6 +286,10 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   `tests/test_styling_stub.py` still pins the stub. "What's in code" is unchanged — M8 -- real remains
   the only not-implemented Pass 2 item.
 
+- 2026-09-07 (architect): **M8 -- real still not delivered this round** — the coder correctly skipped the
+  parked milestone (only `docs/lessons/known-issues.md` changed). Un-parked and re-queued `M8 -- real`;
+  "What's in code" is unchanged.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
@@ -354,7 +358,7 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
     `tests/test_cart_page.py`, `tests/test_confirmation.py`,
     `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **281 passing**.
-- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling; parked this round).
+- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling; re-queued for implementation).
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

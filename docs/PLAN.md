@@ -103,7 +103,7 @@ total, then clears the cart. Includes a clear "to jest wersja demonstracyjna" no
 
 ### M8 — Styling & UX polish
 - [x] M8 -- stub
-- [~] M8 -- real
+- [ ] M8 -- real
 
 Deliverable: `stal/static/style.css`, shared header/nav with cart count, flash messages, footer.
 Stub = minimal base template + a bare CSS file (usable but unstyled). Real = clean, presentable, readable
@@ -260,4 +260,8 @@ add/update/remove/merge/validation, and a full route flow
   "all milestones delivered" next action), `ARCHITECTURE.md` (remove M8 -- real from "Not implemented yet",
   describe the real stylesheet, name `test_styling.py`) and the `tests/test_env_and_docs.py` snapshot — all
   in the same commit.
-- Next action: un-park and implement **M8 -- real** (styling) — the only remaining Pass 2 milestone.
+- 2026-09-07 (architect): **M8 -- real still not delivered this round** — the coder correctly skipped the
+  parked milestone (only `docs/lessons/known-issues.md` changed; no `style.css` or test changes). The 281
+  green tests are the *stub* suite, so `M8 -- real` is now un-parked (`- [~]` → `- [ ]`) and re-queued for
+  implementation; the exact 3-part deliverable stays as spelled out in the note above.
+- Next action: implement **M8 -- real** (styling) — the only remaining Pass 2 milestone.
