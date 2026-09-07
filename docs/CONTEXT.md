@@ -19,3 +19,6 @@ Non-negotiables:
 - `README.md` is owned by the goal / human gate — read only; put all plans/design/notes in `docs/`.
 - Two-pass build: Pass 1 ships each milestone as a stub (whole app clickable end-to-end); Pass 2 replaces
   each with the real implementation. Stub code is intentional, not unfinished.
+- `docs/PLAN.md` + `docs/ARCHITECTURE.md` are pinned by `tests/test_env_and_docs.py` (checkbox state, test
+  counts, implemented/not-yet-existing file lists). Update the docs and those tests together in one commit,
+  or the suite fails.

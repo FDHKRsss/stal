@@ -1,9 +1,12 @@
 """Entry point: build the app and serve it."""
 
 from stal import create_app
-from stal.config import Config
 
 app = create_app()
 
 if __name__ == "__main__":
-    app.run(host=Config.HOST, port=Config.PORT, debug=Config.FLASK_DEBUG)
+    app.run(
+        host=app.config["HOST"],
+        port=app.config["PORT"],
+        debug=app.config["FLASK_DEBUG"],
+    )

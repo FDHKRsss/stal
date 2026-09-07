@@ -11,7 +11,7 @@ These validate the current stub deliverable only:
 - the returned empty containers are fresh objects, not shared singletons.
 
 The real, session-backed implementation (validation, line merging, totals)
-arrives in the real pass and is tested in `tests/test_cart.py` (not yet written).
+arrives in the real pass and is tested in `tests/test_cart.py` (currently a stub smoke test).
 """
 
 from stal import cart

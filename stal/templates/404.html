@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Stal — nie znaleziono strony{% endblock %}
+
+{% block content %}
+<h1>Nie znaleziono strony</h1>
+<p>Przepraszamy, strona o podanym adresie nie istnieje.</p>
+<p><a href="{{ url_for('index') }}">Wróć na stronę główną</a></p>
+{% endblock %}

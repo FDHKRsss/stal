@@ -38,7 +38,7 @@ The north star this plan serves:
 
 ### M1 — App skeleton & runnable config
 - [x] M1 -- stub
-- [ ] M1 -- real
+- [x] M1 -- real
 
 Deliverable: `app.py` entry point, `stal/__init__.py` app factory, `stal/config.py`,
 `requirements.txt`, `requirements-dev.txt`, `.env.example`, `run.bat` (Windows) and `run.sh` (Ubuntu).
@@ -111,7 +111,7 @@ layout (Polish), consistent navigation, cart-count badge, styled product cards, 
 good enough to show the owner.
 
 ### M9 — Tests & robustness
-- [ ] M9 -- stub
+- [x] M9 -- stub
 - [ ] M9 -- real
 
 Deliverable: `tests/test_cart.py`, `tests/test_routes.py`, `tests/conftest.py` (Flask test client).
@@ -158,5 +158,15 @@ add/update/remove/merge/validation, and a full route flow
   Oferta + Koszyk with a `cart-count` badge), flash rendering and a footer; `create_app()` now injects
   `cart_count` via a context processor (returns `0` in the stub). Plan, "What's in code" and the
   plan-state tests updated to record it.
-- Next action: implement **M9 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
-  committing on each milestone acceptance.
+- 2026-09-07 (tester): **M9 -- stub accepted** — 135 tests green (`pytest -q`). Added
+  `tests/test_cart.py` and `tests/test_routes.py` as stub smoke tests (the cart module is wired
+  end-to-end; the app factory creates a Flask app and `/health` answers 200 through the test client).
+  `tests/conftest.py` already provided the `app`/`client` fixtures. Plan, "What's in code" and the
+  plan-state tests updated to record it.
+- 2026-09-07 (tester): **M1 -- real accepted** — 140 tests green (`pytest -q`). `stal/config.py` is now
+  env-driven (reads `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` from `os.environ`, no dotenv/`.env`
+  auto-loading), `/health` returns `{"status":"ok"}`, 404/500 error handlers are registered, and the
+  launch scripts run the real config. `tests/test_env_and_docs.py` and the doc state updated to match.
+- 2026-09-07 (architect): committed **M9 -- stub** + **M1 -- real** together (140 tests green).
+  All Pass-1 stubs are now complete; Pass 2 continues with M2 -- real.
+- Next action: implement **M2 -- real**, committing on each milestone acceptance.

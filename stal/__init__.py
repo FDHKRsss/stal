@@ -1,6 +1,14 @@
 """Flask application factory for the steel mock e-shop."""
 
-from flask import Flask, flash, redirect, render_template, session, url_for
+from flask import (
+    Flask,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    session,
+    url_for,
+)
 
 from stal.cart import cart_count
 from stal.catalog import PRODUCTS
@@ -8,7 +16,7 @@ from stal.config import Config
 
 
 def create_app():
-    """Create and configure the Flask application (stub pass)."""
+    """Create and configure the Flask application."""
     app = Flask(__name__)
     app.config.from_object(Config)
 
@@ -58,6 +66,14 @@ def create_app():
 
     @app.get("/health")
     def health():
-        return "ok"
+        return jsonify({"status": "ok"})
+
+    @app.errorhandler(404)
+    def not_found(_error):
+        return render_template("404.html"), 404
+
+    @app.errorhandler(500)
+    def server_error(_error):
+        return "Wystąpił błąd serwera.", 500
 
     return app

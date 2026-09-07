@@ -11,7 +11,7 @@ These validate the current stub deliverable only:
 
 The real confirmation (validate non-empty cart + payment + delivery + address,
 generate a mock order number and clear the cart) arrives in the real pass and
-is tested in `tests/test_routes.py` (not yet written).
+is tested in `tests/test_routes.py` (currently a stub smoke test).
 """
 
 from pathlib import Path

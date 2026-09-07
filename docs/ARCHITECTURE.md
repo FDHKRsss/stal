@@ -213,20 +213,34 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   and a footer; `create_app()` injects `cart_count` via a context processor (returns `0` in the stub).
   "What's in code" and the doc-state tests updated to match.
 
+- 2026-09-07 (tester): accepted **M9 -- stub** (135 tests green). Added `tests/test_cart.py` and
+  `tests/test_routes.py` as stub smoke tests (the cart module is wired end-to-end; the app factory creates
+  a Flask app and `/health` answers 200 via the test client); `tests/conftest.py` already provided the
+  fixtures. "What's in code" and the doc-state tests updated to match.
+
+- 2026-09-07 (tester): accepted **M1 -- real** (140 tests green). `stal/config.py` is now env-driven
+  (reads `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` from `os.environ` with sane defaults; no dotenv/`.env`
+  auto-loading), `/health` returns `{"status":"ok"}`, and 404/500 error handlers are registered. "What's in
+  code" and the doc-state tests updated to record the real config.
+
+- 2026-09-07 (architect): committed M9 -- stub and M1 -- real (140 tests green).
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
-  `M6 -- stub`, `M7 -- stub` and `M8 -- stub`.
+  `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
+- **Implemented so far (Pass 2):** `M1 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage stub),
     `/oferta` renders `shop.html` (offer stub), `POST /oferta/dodaj` flashes a fixed demo message and
     redirects to `/oferta`, `GET /koszyk` renders `cart.html` (summary stub),
     `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
     `GET /zamowienie` redirects to `/koszyk`, `POST /zamowienie` renders `confirmation.html`
-    (mocked confirmation), and `/health` returns `"ok"`; a context processor injects `cart_count`
-    (from `stal.cart.cart_count`, `0` in the stub) for the shared nav badge.
-  - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
-    intentionally does **not** read the environment or a `.env` file.
+    (mocked confirmation), and `/health` returns `{"status": "ok"}`; a context processor injects `cart_count`
+    (from `stal.cart.cart_count`, `0` in the stub) for the shared nav badge. 404/500 error handlers are
+    registered (404 → `404.html`, 500 → a safe Polish message).
+  - `stal/config.py` — env-driven `Config` reading `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` from
+    `os.environ` with sane defaults; no dotenv/`.env` auto-loading.
   - `stal/catalog.py` — mock catalog: 2 hardcoded products, one variant each; `get_product`/`get_variant`
     raise `KeyError` on unknown ids.
   - `stal/cart.py` — cart helpers (stub): `get_cart`, `add_item`, `update_item`, `remove_item`,
@@ -248,18 +262,22 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `stal/templates/confirmation.html` — mocked order confirmation (extends `base.html`): a static
     "Zamówienie przyjęte" heading, a demo order number `ZAM-DEMO-0001`, a `0,00 zł` total and a link back
     to the homepage.
+  - `stal/templates/404.html` — friendly Polish not-found page (rendered by the registered 404 handler).
   - `stal/static/style.css` — a bare, usable stylesheet for the header/nav, main area, flash messages and
     footer.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
-    `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
+    `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
-  - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
+  - `tests/test_cart.py` — stub smoke test: `stal.cart` exposes the full documented API and its readers
+    return the fixed/empty stub values.
+  - `tests/test_routes.py` — stub smoke test: `create_app()` builds a Flask app and `/health` answers 200
+    through the Flask test client.
+  - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
     `tests/test_homepage_stub.py`, `tests/test_catalog_stub.py`, `tests/test_offer_stub.py`,
     `tests/test_cart_stub.py`, `tests/test_cart_page_stub.py`, `tests/test_confirmation_stub.py`,
-    `tests/test_styling_stub.py` — **133 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M9`. `routes.py`, the remaining template
-  (`404.html`), `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the
-  real-pass design.
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **140 passing**.
+- **Not implemented yet (still to do in Pass 2):** `routes.py` does not exist yet; it is described above as
+  the real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

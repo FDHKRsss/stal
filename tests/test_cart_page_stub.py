@@ -13,7 +13,7 @@ These validate the current stub deliverable only:
 
 The real summary page (rendering live cart lines, per-line update/remove forms
 and conditional address validation) arrives in the real pass and is tested in
-`tests/test_routes.py` (not yet written).
+`tests/test_routes.py` (currently a stub smoke test).
 """
 
 from pathlib import Path
