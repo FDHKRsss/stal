@@ -47,7 +47,7 @@ the stub app. Real = env-driven `HOST` / `PORT` / `SECRET_KEY` / `FLASK_DEBUG` c
 `/health` returning `{"status": "ok"}`, error handlers registered, and working launch scripts.
 
 ### M2 — Homepage (description + brainstorm)
-- [ ] M2 -- stub
+- [x] M2 -- stub
 - [ ] M2 -- real
 
 Deliverable: `templates/base.html` + `templates/index.html`; GET `/`.
@@ -129,5 +129,8 @@ add/update/remove/merge/validation, and a full route flow
 - 2026-09-07 (architect): **M1 -- stub accepted** — 23 tests green (`pytest -q`). The stub is static config
   only and `.env.example` truthfully disclaims env auto-loading (env-driven config arrives in `M1 -- real`).
   Committed as the first Pass-1 milestone.
-- Next action: implement **M2 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+- 2026-09-07 (architect): **M2 -- stub accepted** — 35 tests green (`pytest -q`). `templates/base.html` +
+  `templates/index.html` added; GET `/` renders the homepage (Polish stub copy with the steel assortment and
+  a "demonstracyjna" note). Plan, "What's in code" and the plan-state tests updated to record it.
+- Next action: implement **M3 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
   committing on each milestone acceptance.

@@ -184,21 +184,29 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   unchanged.
 - 2026-09-07 (architect): accepted **M1 -- stub** (23 tests green). Updated "What's in code" so docs describe
   the implemented stub rather than the planned state.
+- 2026-09-07 (architect): accepted **M2 -- stub** (35 tests green). `/` now renders `templates/index.html`;
+  updated "What's in code" to record M2 -- stub and the new template files.
 
 ## What's in code (stubs vs real) — current status
 
-- **Implemented so far (Pass 1):** `M1 -- stub` only.
+- **Implemented so far (Pass 1):** `M1 -- stub` and `M2 -- stub`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
-  - `stal/__init__.py` — `create_app()` with two stub routes: `/` (fixed text) and `/health` (`"ok"`).
+  - `stal/__init__.py` — `create_app()` with two routes: `/` renders `index.html` (homepage stub) and
+    `/health` returns `"ok"`.
   - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
     intentionally does **not** read the environment or a `.env` file.
+  - `stal/templates/base.html` — Polish layout shell (`<html lang="pl">`, `title` + `content` blocks).
+  - `stal/templates/index.html` — homepage stub (extends `base.html`): a short Polish intro listing the
+    assortment (śruby, nakrętki, pręty, kątowniki, płaskowniki, rury) and clearly marked as demo/stub.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
-  - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py` — **23 passing**.
-- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M2`–`M9`. `catalog.py`, `cart.py`,
-  `routes.py`, `templates/`, `static/`, `test_cart.py` and `test_routes.py` do not exist yet; they are
-  described above as the real-pass design.
+  - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py`,
+    `tests/test_homepage_stub.py` — **35 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M3`–`M9`. `catalog.py`, `cart.py`,
+  `routes.py`, `static/`, the remaining templates (`shop.html`, `cart.html`, `confirmation.html`,
+  `404.html`), `test_cart.py` and `test_routes.py` do not exist yet; they are described above as the
+  real-pass design.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

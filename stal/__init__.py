@@ -1,6 +1,6 @@
 """Flask application factory for the steel mock e-shop."""
 
-from flask import Flask
+from flask import Flask, render_template
 
 from stal.config import Config
 
@@ -12,7 +12,7 @@ def create_app():
 
     @app.get("/")
     def index():
-        return "Stal — wersja demonstracyjna (stub)"
+        return render_template("index.html")
 
     @app.get("/health")
     def health():
