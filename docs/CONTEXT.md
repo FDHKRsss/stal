@@ -21,7 +21,9 @@ Non-negotiables:
   each with the real implementation. Stub code is intentional, not unfinished.
 - `docs/PLAN.md` + `docs/ARCHITECTURE.md` are pinned by `tests/test_env_and_docs.py` (checkbox state, the
   "Next action" line, acceptance notes, "What's in code" strings): code, docs and that snapshot test must
-  ship in **one commit**. A green `pytest -q` only proves the suite passes, **not** that the current
-  `-- real` milestone is delivered — the suite pins the stub until `tests/test_*_stub.py` is replaced, and
-  real code alone is not done until the docs + snapshot are synced. Confirm the real code **and** the synced
-  docs before accepting.
+  ship in **one commit** — a green `pytest -q` and synced working-tree files are still **not** delivered
+  until they are actually committed (the reviewer reads the committed state, so uncommitted changes read as
+  stale/unsynced). A green suite alone also proves **not** that the current `-- real` milestone is delivered
+  — the suite pins the stub until `tests/test_*_stub.py` is replaced, and real code alone is not done until
+  the docs + snapshot are synced **and committed**. Confirm the real code **and** the synced, committed docs
+  before accepting.

@@ -264,19 +264,25 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   items/total and chosen payment/delivery; then clears the cart) and `stal/templates/confirmation.html`
   renders that validated, clearly-demo confirmation. `tests/test_confirmation.py` replaces
   `tests/test_confirmation_stub.py`. "What's in code" updated to record M7 -- real as accepted.
+- 2026-09-07 (coder): accepted **M6 -- real** (250 tests green). `GET /koszyk` now renders the real
+  summary (`stal/templates/cart.html`): the live session-backed cart lines and totals with per-line
+  quantity update/remove forms posting to `/koszyk/aktualizuj`, and the mocked payment-method radios
+  and delivery `<select>` (address required unless „odbiór osobisty"). `tests/test_cart_page.py`
+  replaces `tests/test_cart_page_stub.py`. "What's in code" updated to record M6 -- real as accepted.
 
 
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
-- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`, `M4 -- real`, `M5 -- real`, `M7 -- real`.
+- **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`, `M4 -- real`, `M5 -- real`,
+  `M6 -- real`, `M7 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
     `/oferta` renders `shop.html` (real offer), `POST /oferta/dodaj` validates product/variant/quantity
     server-side and flashes a Polish success/error message before redirecting to `/oferta`,
-    `GET /koszyk` renders `cart.html` (summary stub),
-    `POST /koszyk/aktualizuj` flashes a fixed demo message and redirects to `/koszyk`,
+    `GET /koszyk` renders `cart.html` (real summary),
+    `POST /koszyk/aktualizuj` updates one line's quantity or removes that line and redirects to `/koszyk`,
     `GET /zamowienie` redirects to `/koszyk`, `POST /zamowienie` validates a non-empty cart, a known
     payment method, a known delivery location and (for deliveries) an address, then renders the real
     mocked `confirmation.html` (items, total, payment/delivery, `ZAM-YYYYMMDD-HHMMSS` order number)
@@ -305,11 +311,12 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - `stal/templates/shop.html` — offer (real, extends `base.html`): one product card per catalog item with
     a variant dropdown (label + price) and a quantity dropdown (`1..MAX_QTY`), each card's "Dodaj do
     koszyka" form posting to `/oferta/dodaj`.
-  - `stal/templates/cart.html` — summary stub (extends `base.html`): an empty-cart note with a `0,00 zł`
-    total, mocked payment-method radios (przelew / karta / gotówka / odroczony termin), a mocked delivery
-    `<select>` (odbiór osobisty / kurier / transport własny) plus an address field, an "Zaktualizuj
-    koszyk" form posting to `update_cart`, a "Złóż zamówienie" form posting to `place_order`, and a link
-    back to the offer.
+  - `stal/templates/cart.html` — summary (real, extends `base.html`): renders the live cart lines
+    (`{% for line in lines %}`) with per-line quantity update and remove forms posting to
+    `update_cart`, the grand total, mocked payment-method radios (przelew / karta / gotówka /
+    odroczony termin), a mocked delivery `<select>` (odbiór osobisty / kurier / transport własny)
+    plus an address field, a "Złóż zamówienie" form posting to `place_order`, and a link back to
+    the offer.
   - `stal/templates/confirmation.html` — real mocked order confirmation (extends `base.html`): a
     "Zamówienie przyjęte" heading with the live items table (`{% for line in lines %}`) and the grand
     total, the chosen payment method and delivery location (plus the address when delivered), the
@@ -328,11 +335,10 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     through the Flask test client.
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
     `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
-    `tests/test_cart_page_stub.py`, `tests/test_confirmation.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **234 passing**.
-- **Not implemented yet (still to do in Pass 2):** `M6 -- real` (summary/checkout — **parked this
-  round**: reported green but still the stub, see review notes), `M8 -- real` (styling) and
-  `M9 -- real` (tests & robustness).
+    `tests/test_cart_page.py`, `tests/test_confirmation.py`,
+    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **250 passing**.
+- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling) and `M9 -- real`
+  (tests & robustness).
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.

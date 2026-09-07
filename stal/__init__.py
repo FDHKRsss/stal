@@ -19,6 +19,8 @@ from stal.cart import (
     cart_count,
     cart_lines,
     clear_cart,
+    remove_item,
+    update_item,
 )
 from stal.catalog import PRODUCTS, get_product, get_variant
 from stal.config import Config
@@ -106,13 +108,58 @@ def create_app():
 
     @app.get("/koszyk")
     def cart():
-        return render_template("cart.html")
+        # Real pass: render the live session-backed cart lines and their
+        # totals, together with the mocked payment/delivery selectors. A broken
+        # (stale/tampered) cart line is dropped instead of crashing the demo.
+        try:
+            lines = cart_lines(session)
+        except KeyError:
+            clear_cart(session)
+            flash(
+                "Koszyk zawierał nieaktualne pozycje i został wyczyszczony.",
+                "error",
+            )
+            return redirect(url_for("offer"))
+
+        total = round(sum(line["line_total"] for line in lines), 2)
+        return render_template(
+            "cart.html",
+            lines=lines,
+            total=total,
+            payment_methods=PAYMENT_METHODS,
+            delivery_methods=DELIVERY_METHODS,
+            pickup_delivery=PICKUP_DELIVERY,
+            max_qty=MAX_QTY,
+        )
 
     @app.post("/koszyk/aktualizuj")
     def update_cart():
-        # Stub: the route ignores the submitted form and flashes a fixed
-        # message so the whole update-cart flow is clickable end-to-end.
-        flash("Koszyk zaktualizowany (wersja demonstracyjna).", "success")
+        # Real pass: update one line's quantity or remove that line. Each form
+        # posts its own ``product_id``/``variant_id`` (plus ``qty`` for updates
+        # and an ``action`` switch for removals). Invalid quantity input never
+        # crashes — it flashes a Polish message and returns to the summary.
+        action = request.form.get("action", "update").strip()
+        product_id = request.form.get("product_id", "").strip()
+        variant_id = request.form.get("variant_id", "").strip()
+
+        if action == "remove":
+            remove_item(session, product_id, variant_id)
+            flash("Usunięto pozycję z koszyka.", "success")
+            return redirect(url_for("cart"))
+
+        qty_raw = request.form.get("qty", "").strip()
+        try:
+            qty = int(qty_raw)
+        except (TypeError, ValueError):
+            flash("Ilość musi być liczbą całkowitą.", "error")
+            return redirect(url_for("cart"))
+
+        if qty < 1 or qty > MAX_QTY:
+            flash(f"Ilość musi być liczbą od 1 do {MAX_QTY}.", "error")
+            return redirect(url_for("cart"))
+
+        update_item(session, product_id, variant_id, qty)
+        flash("Zaktualizowano koszyk.", "success")
         return redirect(url_for("cart"))
 
     @app.get("/zamowienie")

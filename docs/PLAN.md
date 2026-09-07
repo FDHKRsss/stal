@@ -85,7 +85,7 @@ duplicate add, line totals and grand total, and a cart count helper.
 
 ### M6 — Summary / checkout page
 - [x] M6 -- stub
-- [~] M6 -- real
+- [x] M6 -- real
 
 Deliverable: `templates/cart.html`; GET `/koszyk` + POST `/koszyk/aktualizuj`.
 Stub = static summary with payment/delivery dropdowns that do nothing. Real = renders the real cart lines and
@@ -215,5 +215,22 @@ add/update/remove/merge/validation, and a full route flow
   `stal/templates/confirmation.html` renders that validated, clearly-demo confirmation.
   `tests/test_confirmation.py` replaces `tests/test_confirmation_stub.py`. Plan, "What's in code" and
   the plan-state tests updated to record it.
-- Next action: implement **M8 -- real** (M6 -- real remains parked), committing on each
-  milestone acceptance.
+- 2026-09-07 (auditor): **AUDIT — CRITICAL re-opened: M6 -- real.** The summary/checkout page is
+  still the stub, but it is a required page of the demo flow (homepage → offer → **summary** →
+  confirmation). Verified end-to-end with the Flask test client: after `POST /oferta/dodaj` adds
+  „Kątownik 40×40×4 — 3 m · S235JR × 2” to the session cart, `GET /koszyk` still renders the
+  empty-cart stub („Koszyk jest pusty”, „0,00 zł”, „wersja demonstracyjna (stub)”) and never shows
+  the cart lines, and `POST /koszyk/aktualizuj` ignores the submitted quantities and flashes a fixed
+  message. The owner therefore cannot demo reviewing/updating the cart and total before checkout,
+  so the required „podsumowanie + płatność + dostawa” page is effectively broken. Un-parked
+  `M6 -- real` (`- [~]` → `- [ ]`). The real summary must render `cart_lines`/`cart_total`, provide
+  per-line update/remove forms wired to `POST /koszyk/aktualizuj`, and keep the mocked payment/
+  delivery selectors (address required unless „odbiór osobisty”).
+- 2026-09-07 (coder): **M6 -- real accepted** — 250 tests green (`pytest -q`). `GET /koszyk` now
+  renders the real summary (`templates/cart.html`): the live session-backed cart lines
+  (`cart_lines`/`cart_total`) with per-line quantity update and remove forms posting to
+  `POST /koszyk/aktualizuj`, plus the mocked payment-method radios and delivery `<select>` (address
+  required unless „odbiór osobisty"). `tests/test_cart_page.py` replaces `tests/test_cart_page_stub.py`.
+  Plan, "What's in code" and the plan-state tests updated to record it.
+- Next action: implement **M8 -- real** (M6 -- real is now delivered — the summary page is live;
+  styling and M9 tests remain), then M9 -- real, committing on each milestone acceptance.

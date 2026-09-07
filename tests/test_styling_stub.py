@@ -103,10 +103,18 @@ def test_nav_and_footer_are_shared_across_pages(client):
 
 
 def test_flash_renders_within_shared_layout(client):
-    resp = client.post("/koszyk/aktualizuj", data={}, follow_redirects=True)
+    resp = client.post(
+        "/oferta/dodaj",
+        data={
+            "product_id": "sruby-m8x30",
+            "variant_id": "ocynkowana",
+            "qty": "1",
+        },
+        follow_redirects=True,
+    )
     html = resp.get_data(as_text=True)
     assert resp.status_code == 200
-    assert "Koszyk zaktualizowany (wersja demonstracyjna)." in html
+    assert "Dodano do koszyka:" in html
     assert "flash flash-success" in html
     # The shared header/nav and footer still surround the flash block.
     assert '<header class="site-header">' in html

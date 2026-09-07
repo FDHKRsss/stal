@@ -211,11 +211,14 @@ def test_plan_marks_m5_real_done():
     assert "- [x] M5 -- real" in _plan_text()
 
 
+def test_plan_marks_m6_real_done():
+    assert "- [x] M6 -- real" in _plan_text()
+
+
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    # M6 -- real is parked this round (reported green but still the stub);
-    # M8..M9 are still untouched future real steps.
-    assert "- [~] M6 -- real" in content
+    # M6 -- real is now done; M8..M9 are still untouched future real steps.
+    assert "- [x] M6 -- real" in content
     for n in range(8, 10):
         assert f"- [ ] M{n} -- real" in content
 
@@ -242,6 +245,10 @@ def test_plan_has_m4_real_acceptance_note():
 
 def test_plan_has_m5_real_acceptance_note():
     assert "M5 -- real accepted" in _plan_text()
+
+
+def test_plan_has_m6_real_acceptance_note():
+    assert "M6 -- real accepted" in _plan_text()
 
 
 def test_plan_has_m7_real_acceptance_note():
@@ -275,9 +282,10 @@ def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     # Routes live in the app factory (__init__.py), not a separate routes.py module.
     assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
-    # M6 -- real stays parked; M7 -- real is now done, so only M6/M8/M9 remain.
-    for n in (6, 8, 9):
+    # M6 -- real and M7 -- real are now done, so only M8/M9 remain.
+    for n in (8, 9):
         assert f"M{n} -- real" in not_yet
+    assert "M6 -- real" not in not_yet
     assert "M7 -- real" not in not_yet
 
 
@@ -299,6 +307,10 @@ def test_architecture_has_m4_real_acceptance_note():
 
 def test_architecture_has_m5_real_acceptance_note():
     assert "accepted **M5 -- real**" in _arch_text()
+
+
+def test_architecture_has_m6_real_acceptance_note():
+    assert "accepted **M6 -- real**" in _arch_text()
 
 
 def test_architecture_has_m7_real_acceptance_note():
@@ -324,6 +336,16 @@ def test_architecture_cart_described_as_real():
     assert "session-backed cart" in section
     assert "test_cart.py" in section
     assert "test_cart_stub.py" not in section
+
+
+def test_architecture_cart_page_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # The real M6 summary landed; the "What's in code" section must describe it
+    # and must no longer name the replaced stub test.
+    assert "summary stub" not in section
+    assert "test_cart_page.py" in section
+    assert "test_cart_page_stub.py" not in section
 
 
 def test_architecture_confirmation_described_as_real():

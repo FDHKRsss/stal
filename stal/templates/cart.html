@@ -1,37 +1,81 @@
 {% extends "base.html" %}
 
-{% block title %}Stal — koszyk (stub){% endblock %}
+{% block title %}Stal — koszyk{% endblock %}
 
 {% block content %}
 <h1>Koszyk</h1>
-<p>Wersja demonstracyjna (stub) — podsumowanie zamówienia z wyborem sposobu płatności i miejsca dostawy.</p>
+<p class="lead">
+  Podsumowanie zamówienia z wyborem sposobu płatności i miejsca dostawy.
+  To jest wersja demonstracyjna — zamówienie nie zostanie faktycznie złożone.
+</p>
 
 <section>
   <h2>Twoje produkty</h2>
-  <p>Koszyk jest pusty — w wersji demonstracyjnej przycisk „Dodaj do koszyka” nie zapisuje jeszcze pozycji.</p>
-  <p><strong>Razem do zapłaty: 0,00 zł</strong></p>
-  <form method="post" action="{{ url_for('update_cart') }}">
-    <button type="submit">Zaktualizuj koszyk</button>
-  </form>
+
+  {% if lines %}
+    <table class="cart-lines">
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Wariant</th>
+          <th>Ilość</th>
+          <th>Wartość</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line in lines %}
+          <tr>
+            <td>{{ line.product.name }}</td>
+            <td>{{ line.variant.label }}</td>
+            <td>
+              <form class="line-update-form" method="post" action="{{ url_for('update_cart') }}">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="product_id" value="{{ line.product_id }}">
+                <input type="hidden" name="variant_id" value="{{ line.variant_id }}">
+                <input type="number" name="qty" value="{{ line.qty }}" min="1" max="{{ max_qty }}">
+                <button type="submit">Aktualizuj</button>
+              </form>
+            </td>
+            <td>{{ line.line_total | format_price }}</td>
+            <td>
+              <form class="line-remove-form" method="post" action="{{ url_for('update_cart') }}">
+                <input type="hidden" name="action" value="remove">
+                <input type="hidden" name="product_id" value="{{ line.product_id }}">
+                <input type="hidden" name="variant_id" value="{{ line.variant_id }}">
+                <button type="submit">Usuń</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Koszyk jest pusty.</p>
+  {% endif %}
+
+  <p><strong>Razem do zapłaty: {{ total | format_price }}</strong></p>
 </section>
 
 <form method="post" action="{{ url_for('place_order') }}" class="checkout-form">
   <section>
     <h2>Sposób płatności</h2>
-    <label><input type="radio" name="payment_method" value="przelew" checked> przelew bankowy (przedpłata)</label><br>
-    <label><input type="radio" name="payment_method" value="karta"> karta płatnicza online</label><br>
-    <label><input type="radio" name="payment_method" value="gotowka"> gotówka przy odbiorze</label><br>
-    <label><input type="radio" name="payment_method" value="odroczony"> przelew z odroczonym terminem (dla firm)</label>
+    {% for key, label in payment_methods.items() %}
+      <label><input type="radio" name="payment_method" value="{{ key }}"{% if loop.first %} checked{% endif %}> {{ label }}</label><br>
+    {% endfor %}
   </section>
 
   <section>
     <h2>Miejsce dostawy</h2>
     <select name="delivery_method">
-      <option value="odbior">odbiór osobisty (magazyn)</option>
-      <option value="kurier">dostawa kurierem</option>
-      <option value="transport">dostawa transportem własnym</option>
+      {% for key, label in delivery_methods.items() %}
+        <option value="{{ key }}">{{ label }}</option>
+      {% endfor %}
     </select>
-    <p><label>Adres dostawy: <input type="text" name="address" placeholder="ulica, kod pocztowy, miasto"></label></p>
+    <p>
+      <label>Adres dostawy: <input type="text" name="address" placeholder="ulica, kod pocztowy, miasto"></label>
+      <small>Wymagany, jeśli nie wybierasz odbioru osobistego.</small>
+    </p>
   </section>
 
   <button type="submit">Złóż zamówienie</button>
