@@ -166,13 +166,39 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
 
 - **Port already in use** → configurable `PORT`; clear startup error remains visible (do not silently retry).
 - **Missing/empty `SECRET_KEY`** → dev fallback key + note to override; session works for the demo.
-- **Tampered/oversized session** → Flask returns a 400/436 on bad signatures; cart helpers never trust client
-  ids and re-validate against the catalog.
+- **Tampered / invalid session cookie** → Flask's `SecureCookieSessionInterface.open_session` catches
+  `BadSignature` and returns an **empty session** (never a 400), so a tampered cookie behaves like an empty
+  cart. Cart helpers additionally never trust client-supplied product/variant ids and re-validate them
+  against the catalog.
+- **Oversized cookie** → Flask does **not** reject it with 400; browsers silently drop cookies over ~4 KB.
+  The demo cart is tiny, so this is not a real risk. (If it ever became one, server-side storage would be
+  required, which is out of scope for this mock.)
 - **Unknown product/variant or bad quantity** → friendly flash + redirect, no crash.
 - **Missing dependencies** → launcher installs `requirements.txt`; tests install `requirements-dev.txt`.
 
-## What's in code (stubs vs real)
+## Review notes
 
-- **Pass 1 (stubs):** every route and module exists and the app runs end-to-end with mocked catalog/cart/checkout
-  data so the whole flow is clickable.
-- **Pass 2 (real):** each stub is replaced with the real implementation described above, one milestone at a time.
+- 2026-09-07 (critic): corrected the "failure modes" bullet that claimed Flask returns 400 on a bad session
+  signature. Flask actually returns an empty session on `BadSignature`, and it does not reject oversized
+  cookies with 400 — browsers drop them. Docs updated to state the real behavior; the rest of the design is
+  unchanged.
+- 2026-09-07 (architect): accepted **M1 -- stub** (23 tests green). Updated "What's in code" so docs describe
+  the implemented stub rather than the planned state.
+
+## What's in code (stubs vs real) — current status
+
+- **Implemented so far (Pass 1):** `M1 -- stub` only.
+  - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
+  - `stal/__init__.py` — `create_app()` with two stub routes: `/` (fixed text) and `/health` (`"ok"`).
+  - `stal/config.py` — static `Config` (`HOST`, `PORT`, `SECRET_KEY`, `FLASK_DEBUG`). The stub pass
+    intentionally does **not** read the environment or a `.env` file.
+  - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
+    `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading in the stub),
+    `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
+  - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_stub_env_and_docs.py` — **23 passing**.
+- **Not implemented yet (still to do in Pass 1, then Pass 2):** `M2`–`M9`. `catalog.py`, `cart.py`,
+  `routes.py`, `templates/`, `static/`, `test_cart.py` and `test_routes.py` do not exist yet; they are
+  described above as the real-pass design.
+
+Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
+each stub with the real implementation described in this document.

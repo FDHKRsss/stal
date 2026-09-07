@@ -22,7 +22,8 @@ The north star this plan serves:
 - Mock only: no real payments, no real order processing, no real stock/warehouse integration.
 - Polish UI copy (the demo is for a Polish owner).
 - Sensible port handling: host port configurable via env var with a sane default; never assume a fixed
-  host port (e.g. 8000) is free.
+  host port (e.g. 8000) is free. Env is read from `os.environ` only — no python-dotenv, `.env` is never
+  auto-loaded.
 - `README.md` is owned by the goal / human gate — read only. All plans/design/notes live in `docs/`.
 
 ## Execution order
@@ -36,7 +37,7 @@ The north star this plan serves:
 ## Milestones
 
 ### M1 — App skeleton & runnable config
-- [ ] M1 -- stub
+- [x] M1 -- stub
 - [ ] M1 -- real
 
 Deliverable: `app.py` entry point, `stal/__init__.py` app factory, `stal/config.py`,
@@ -122,5 +123,11 @@ add/update/remove/merge/validation, and a full route flow
 ## Status & review notes
 
 - No human notes yet.
-- Next action: implement **Pass 1 (all milestones as stubs)**, then **Pass 2 (real)**, committing on each
-  milestone acceptance.
+- 2026-09-07 (critic): "Failure modes considered" previously claimed Flask returns 400 on a bad session
+  signature. That was wrong — Flask returns an empty session on `BadSignature` and does not reject oversized
+  cookies with 400 (browsers drop them). Corrected in `docs/ARCHITECTURE.md`; plan/milestones unchanged.
+- 2026-09-07 (architect): **M1 -- stub accepted** — 23 tests green (`pytest -q`). The stub is static config
+  only and `.env.example` truthfully disclaims env auto-loading (env-driven config arrives in `M1 -- real`).
+  Committed as the first Pass-1 milestone.
+- Next action: implement **M2 -- stub**, continuing Pass 1 (all milestones as stubs), then Pass 2 (real),
+  committing on each milestone acceptance.

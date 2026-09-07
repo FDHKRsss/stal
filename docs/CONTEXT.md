@@ -14,5 +14,6 @@ Non-negotiables:
   **offer** (product/variant/quantity dropdowns, add to cart), **summary** (cart + mocked payment method and
   delivery location).
 - Polish UI copy (the demo is for a Polish owner).
-- Configurable host port via env (sane default); never assume a fixed port is free.
+- Configurable `HOST`/`PORT`/`SECRET_KEY`/`FLASK_DEBUG` via env with sane defaults; never assume a fixed port
+  is free. Env is read from `os.environ` only — no python-dotenv, `.env` is never auto-loaded.
 - `README.md` is owned by the goal / human gate — read only; put all plans/design/notes in `docs/`.
