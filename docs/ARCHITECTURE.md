@@ -269,6 +269,11 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   quantity update/remove forms posting to `/koszyk/aktualizuj`, and the mocked payment-method radios
   and delivery `<select>` (address required unless „odbiór osobisty"). `tests/test_cart_page.py`
   replaces `tests/test_cart_page_stub.py`. "What's in code" updated to record M6 -- real as accepted.
+- 2026-09-07 (architect): **M8 -- real not delivered this round** — reported green, but
+  `stal/static/style.css` is still the bare stub stylesheet and `tests/test_styling_stub.py` still
+  pins the stub; the 250 green tests are the stub suite, not M8 -- real. Parked `M8 -- real` as
+  `- [~]` so the coder moves on to M9. The templates already carry the semantic classes the real
+  stylesheet will style.
 
 
 ## What's in code (stubs vs real) — current status

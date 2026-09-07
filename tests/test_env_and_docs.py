@@ -217,14 +217,15 @@ def test_plan_marks_m6_real_done():
 
 def test_plan_other_real_steps_still_unchecked():
     content = _plan_text()
-    # M6 -- real is now done; M8..M9 are still untouched future real steps.
+    # M6 -- real is now done; M8 -- real is parked this round (reported green
+    # but still the stub); M9 -- real is still an untouched future step.
     assert "- [x] M6 -- real" in content
-    for n in range(8, 10):
-        assert f"- [ ] M{n} -- real" in content
+    assert "- [~] M8 -- real" in content
+    assert "- [ ] M9 -- real" in content
 
 
-def test_plan_next_action_points_to_m8_real():
-    assert "Next action: implement **M8 -- real**" in _plan_text()
+def test_plan_next_action_points_to_m9_real():
+    assert "Next action: implement **M9 -- real**" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():

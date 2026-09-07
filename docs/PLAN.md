@@ -103,7 +103,7 @@ total, then clears the cart. Includes a clear "to jest wersja demonstracyjna" no
 
 ### M8 — Styling & UX polish
 - [x] M8 -- stub
-- [ ] M8 -- real
+- [~] M8 -- real
 
 Deliverable: `stal/static/style.css`, shared header/nav with cart count, flash messages, footer.
 Stub = minimal base template + a bare CSS file (usable but unstyled). Real = clean, presentable, readable
@@ -232,5 +232,12 @@ add/update/remove/merge/validation, and a full route flow
   `POST /koszyk/aktualizuj`, plus the mocked payment-method radios and delivery `<select>` (address
   required unless „odbiór osobisty"). `tests/test_cart_page.py` replaces `tests/test_cart_page_stub.py`.
   Plan, "What's in code" and the plan-state tests updated to record it.
-- Next action: implement **M8 -- real** (M6 -- real is now delivered — the summary page is live;
-  styling and M9 tests remain), then M9 -- real, committing on each milestone acceptance.
+- 2026-09-07 (architect): **M8 -- real not delivered this round** — the coder/tester reported green,
+  but `stal/static/style.css` is still the bare stub stylesheet (its header comment still says
+  "stub pass") and `tests/test_styling_stub.py` still pins the stub; the 250 green tests are the stub
+  suite, not M8 -- real. The templates already carry the semantic classes (`product-grid`,
+  `product-card`, `cart-lines`, `checkout-form`, `order-lines`, `demo-note`) but the CSS does not
+  style them yet. Parking `M8 -- real` as `- [~]` so the coder moves on to M9 instead of re-trying
+  the same stuck item.
+- Next action: implement **M9 -- real** (M8 -- real is parked this round — see the note above),
+  committing on each milestone acceptance.
