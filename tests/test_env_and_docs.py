@@ -215,17 +215,15 @@ def test_plan_marks_m6_real_done():
     assert "- [x] M6 -- real" in _plan_text()
 
 
-def test_plan_other_real_steps_still_unchecked():
+def test_plan_marks_all_real_steps_done():
     content = _plan_text()
-    # M6 and M9 -- real are now done; M8 -- real is re-queued (un-parked) and
-    # still the stub.
-    assert "- [x] M6 -- real" in content
-    assert "- [x] M9 -- real" in content
-    assert "- [ ] M8 -- real" in content
+    for n in range(1, 10):
+        assert f"- [x] M{n} -- real" in content
 
 
-def test_plan_next_action_points_to_m8_real():
-    assert "Next action: implement **M8 -- real**" in _plan_text()
+def test_plan_next_action_reports_all_milestones_delivered():
+    assert "Next action: **none**" in _plan_text()
+    assert "every milestone" in _plan_text()
 
 
 def test_plan_has_m1_real_acceptance_note():
@@ -256,6 +254,10 @@ def test_plan_has_m7_real_acceptance_note():
     assert "M7 -- real accepted" in _plan_text()
 
 
+def test_plan_has_m8_real_acceptance_note():
+    assert "M8 -- real accepted" in _plan_text()
+
+
 def test_plan_has_m9_real_acceptance_note():
     assert "M9 -- real accepted" in _plan_text()
 
@@ -277,7 +279,7 @@ def test_architecture_catalog_described_as_real():
     assert "test_catalog_stub.py" not in section
 
 
-def test_architecture_404_is_implemented_and_remaining_real_work_listed():
+def test_architecture_404_is_implemented_and_no_remaining_real_work():
     arch = _arch_text()
     section = arch.split("## What's in code", 1)[1]
     assert "Not implemented yet" in section
@@ -287,11 +289,9 @@ def test_architecture_404_is_implemented_and_remaining_real_work_listed():
     # Routes live in the app factory (__init__.py), not a separate routes.py module.
     assert "routes.py does not exist" not in section
     assert not (ROOT / "stal" / "routes.py").exists()
-    # M6, M7 and M9 -- real are now done, so only M8 -- real remains (re-queued).
-    assert "M8 -- real" in not_yet
-    assert "M9 -- real" not in not_yet
-    assert "M6 -- real" not in not_yet
-    assert "M7 -- real" not in not_yet
+    # Every Pass 2 milestone is now delivered, so no real work remains listed.
+    assert "None" in not_yet
+    assert "M8 -- real" not in not_yet
 
 
 def test_architecture_has_m1_real_acceptance_note():
@@ -320,6 +320,10 @@ def test_architecture_has_m6_real_acceptance_note():
 
 def test_architecture_has_m7_real_acceptance_note():
     assert "accepted **M7 -- real**" in _arch_text()
+
+
+def test_architecture_has_m8_real_acceptance_note():
+    assert "accepted **M8 -- real**" in _arch_text()
 
 
 def test_architecture_has_m9_real_acceptance_note():
@@ -366,6 +370,18 @@ def test_architecture_confirmation_described_as_real():
     assert "ZAM-DEMO-0001" not in section
     assert "test_confirmation.py" in section
     assert "test_confirmation_stub.py" not in section
+
+
+def test_architecture_styling_described_as_real():
+    arch = _arch_text()
+    section = arch.split("## What's in code", 1)[1]
+    # The real M8 stylesheet landed; the "What's in code" section must
+    # describe it and must no longer name the replaced stub test.
+    assert "test_styling.py" in section
+    assert "test_styling_stub.py" not in section
+    assert "product-card" in section
+    assert "presentable stylesheet" in section
+    assert "bare, usable stylesheet" not in section
 
 
 def test_architecture_routes_described_as_real():

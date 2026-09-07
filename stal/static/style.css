@@ -1,61 +1,381 @@
-/* Bare stylesheet for the steel mock e-shop (stub pass). */
+/* Stylesheet for the steel mock e-shop (real pass).
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  color: #222;
-  line-height: 1.4;
+   A single, presentable stylesheet: the shared header/nav/flash/footer shell
+   plus the offer product cards, the cart and confirmation tables, the
+   checkout form and the "wersja demonstracyjna" callouts. No build step, no
+   external assets — just this file linked from base.html.
+*/
+
+:root {
+  --steel-900: #1f2937;
+  --steel-700: #334155;
+  --steel-500: #64748b;
+  --steel-300: #cbd5e1;
+  --accent: #c2410c;
+  --accent-hover: #9a3412;
+  --link: #1d4ed8;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --demo-bg: #fffbeb;
+  --demo-border: #fde68a;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #1e293b;
+  background: var(--bg);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--link);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 1.9rem;
+  color: var(--steel-900);
+}
+
+h2 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.3rem;
+  color: var(--steel-700);
+}
+
+.lead {
+  max-width: 70ch;
+  color: var(--steel-500);
+  font-size: 1.05rem;
+}
+
+/* --- shared header / nav ----------------------------------------------- */
+
 .site-header {
-  border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  background: #f5f5f5;
+  background: var(--steel-900);
+  border-bottom: 3px solid var(--accent);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
 }
 
 .site-nav a {
-  margin-right: 1rem;
+  color: var(--steel-300);
+  font-weight: 500;
   text-decoration: none;
-  color: #005a9c;
+}
+
+.site-nav a:hover {
+  color: #ffffff;
 }
 
 .site-nav .nav-brand {
-  font-weight: bold;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
 }
 
 .cart-count {
-  font-weight: bold;
+  display: inline-block;
+  min-width: 1.5rem;
+  margin-left: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  text-align: center;
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
+/* --- main layout -------------------------------------------------------- */
+
 .site-main {
-  padding: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 2.5rem;
 }
+
+.page-intro {
+  margin-bottom: 1.25rem;
+}
+
+.cta {
+  margin: 1.75rem 0 0.5rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: var(--accent);
+  color: #ffffff;
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.button:hover {
+  background: var(--accent-hover);
+}
+
+/* --- flash messages ----------------------------------------------------- */
 
 .flashes {
   list-style: none;
+  margin: 0 0 1.25rem;
   padding: 0;
-  margin: 0 0 1rem;
 }
 
 .flash {
-  padding: 0.5rem;
   margin: 0.5rem 0;
-  border: 1px solid #ccc;
+  padding: 0.7rem 0.9rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--steel-500);
+  border-radius: var(--radius);
 }
 
 .flash-success {
-  background: #e6ffe6;
-  border-color: #9c9;
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  border-left-color: #16a34a;
 }
 
 .flash-error {
-  background: #ffe6e6;
-  border-color: #c99;
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  border-left-color: #dc2626;
 }
 
-.site-footer {
-  border-top: 1px solid #ccc;
-  padding: 0.75rem 1rem;
+/* --- offer: product grid & cards --------------------------------------- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.product-card h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.product-category {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.product-description {
+  flex-grow: 1;
+  margin: 0;
+  color: var(--steel-500);
+  font-size: 0.95rem;
+}
+
+.product-unit {
+  margin: 0;
+  color: var(--steel-700);
+  font-size: 0.9rem;
+}
+
+.add-to-cart-form {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.add-to-cart-form label {
+  color: var(--steel-700);
   font-size: 0.85rem;
-  color: #555;
+  font-weight: 600;
+}
+
+/* --- forms -------------------------------------------------------------- */
+
+select,
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  color: #1e293b;
+}
+
+button {
+  padding: 0.5rem 0.9rem;
+  background: var(--steel-700);
+  border: 1px solid var(--steel-700);
+  border-radius: var(--radius);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--steel-900);
+  border-color: var(--steel-900);
+}
+
+/* --- cart / confirmation tables ---------------------------------------- */
+
+.cart-lines,
+.order-lines {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.cart-lines th,
+.order-lines th {
+  padding: 0.6rem 0.75rem;
+  background: var(--steel-700);
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.cart-lines td,
+.order-lines td {
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.cart-lines tbody tr:hover,
+.order-lines tbody tr:hover {
+  background: #f1f5f9;
+}
+
+.line-update-form,
+.line-remove-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.line-update-form input[type="number"] {
+  width: 5rem;
+}
+
+/* --- checkout form ------------------------------------------------------ */
+
+.checkout-form {
+  margin-top: 1.5rem;
+  padding: 1.1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.checkout-form section {
+  margin-bottom: 1rem;
+}
+
+.checkout-form h2 {
+  margin-top: 0;
+}
+
+.checkout-form label {
+  display: block;
+  margin: 0.35rem 0;
+}
+
+.checkout-form select {
+  max-width: 24rem;
+}
+
+.checkout-form input[type="text"] {
+  max-width: 30rem;
+}
+
+.checkout-form small {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--steel-500);
+}
+
+/* --- demo callouts ------------------------------------------------------ */
+
+.demo-note {
+  margin: 1rem 0;
+  padding: 0.7rem 0.9rem;
+  background: var(--demo-bg);
+  border: 1px solid var(--demo-border);
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius);
+  color: #78350f;
+}
+
+/* --- footer ------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: 2rem;
+  background: var(--steel-900);
+  border-top: 1px solid var(--border);
+}
+
+.site-footer p {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+  color: var(--steel-300);
+  font-size: 0.85rem;
+}
+
+/* --- small screens ------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .site-nav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .cart-lines,
+  .order-lines {
+    display: block;
+    overflow-x: auto;
+  }
 }

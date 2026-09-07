@@ -103,7 +103,7 @@ total, then clears the cart. Includes a clear "to jest wersja demonstracyjna" no
 
 ### M8 — Styling & UX polish
 - [x] M8 -- stub
-- [ ] M8 -- real
+- [x] M8 -- real
 
 Deliverable: `stal/static/style.css`, shared header/nav with cart count, flash messages, footer.
 Stub = minimal base template + a bare CSS file (usable but unstyled). Real = clean, presentable, readable
@@ -264,4 +264,10 @@ add/update/remove/merge/validation, and a full route flow
   parked milestone (only `docs/lessons/known-issues.md` changed; no `style.css` or test changes). The 281
   green tests are the *stub* suite, so `M8 -- real` is now un-parked (`- [~]` → `- [ ]`) and re-queued for
   implementation; the exact 3-part deliverable stays as spelled out in the note above.
-- Next action: implement **M8 -- real** (styling) — the only remaining Pass 2 milestone.
+- 2026-09-07 (coder): **M8 -- real accepted** — 284 tests green (`pytest -q`). `stal/static/style.css`
+  is now a real, presentable stylesheet (no "stub pass" marker) that styles the shared header/nav
+  (with the `cart-count` badge), flash messages and footer as well as the `product-grid`/`product-card`
+  offer cards, the `cart-lines`/`order-lines` tables, the `checkout-form` and the `demo-note` callouts.
+  `tests/test_styling.py` replaces `tests/test_styling_stub.py`. Plan, "What's in code" and the
+  plan-state tests updated to record it.
+- Next action: **none** — every milestone (M1–M9, both `-- stub` and `-- real`) is delivered.

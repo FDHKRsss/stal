@@ -35,4 +35,5 @@ _Recurring walls/gotchas and how to get past them. One bullet each._
 - **`- [~]` means PARKED, not pending.** A coder must skip a parked milestone and report "nothing to
   implement" — do not re-attempt or un-park it (only the auditor/architect un-parks it back to `- [ ]`).
   When the only remaining item is parked (e.g. M8 -- real), doing nothing is the correct outcome, not a
-  signal to invent work.
+  signal to invent work — but the auditor/architect must then actually un-park it (`- [~]` → `- [ ]`) and
+  re-queue it, or a parked last-milestone deadlocks completion (everyone keeps correctly skipping it).

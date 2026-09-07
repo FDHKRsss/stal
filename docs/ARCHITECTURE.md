@@ -290,12 +290,18 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   parked milestone (only `docs/lessons/known-issues.md` changed). Un-parked and re-queued `M8 -- real`;
   "What's in code" is unchanged.
 
+- 2026-09-07 (coder): accepted **M8 -- real** (284 tests green). `stal/static/style.css` is now a real,
+  presentable stylesheet (no "stub pass" marker) that styles the product grid/cards, cart/confirmation
+  tables, checkout form and demo callouts in addition to the shared header/nav/flash/footer shell;
+  `tests/test_styling.py` replaces `tests/test_styling_stub.py`. "What's in code" and the plan-state
+  tests updated.
+
 ## What's in code (stubs vs real) — current status
 
 - **Implemented so far (Pass 1):** `M1 -- stub`, `M2 -- stub`, `M3 -- stub`, `M4 -- stub`, `M5 -- stub`,
   `M6 -- stub`, `M7 -- stub`, `M8 -- stub` and `M9 -- stub`.
 - **Implemented so far (Pass 2):** `M1 -- real`, `M2 -- real`, `M3 -- real`, `M4 -- real`, `M5 -- real`,
-  `M6 -- real`, `M7 -- real`, `M9 -- real`.
+  `M6 -- real`, `M7 -- real`, `M8 -- real`, `M9 -- real`.
   - `app.py` — entry point (`app = create_app()`; `app.run(...)` guarded by `__main__`).
   - `stal/__init__.py` — `create_app()` with eight routes: `/` renders `index.html` (homepage real copy),
     `/oferta` renders `shop.html` (real offer), `POST /oferta/dodaj` validates product/variant/quantity
@@ -342,8 +348,10 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
     clock-based demo order number (`{{ order.number }}`), a clear „wersja demonstracyjna" note and a
     link back to the homepage.
   - `stal/templates/404.html` — friendly Polish not-found page (rendered by the registered 404 handler).
-  - `stal/static/style.css` — a bare, usable stylesheet for the header/nav, main area, flash messages and
-    footer.
+  - `stal/static/style.css` — a real, presentable stylesheet (no "stub pass" marker): a CSS-variable
+    palette plus the shared header/nav (with the `cart-count` badge), flash messages, footer, a responsive
+    `product-grid` of `product-card` offer cards, the `cart-lines`/`order-lines` tables, the
+    `checkout-form`, and the `demo-note` callouts.
   - `requirements.txt` (`Flask>=3.0`), `requirements-dev.txt` (`-r requirements.txt` + `pytest`),
     `pytest.ini`, `.env.example` (documents config vars and explicitly disclaims env auto-loading),
     `run.bat` / `run.sh` (create `.venv` if missing, install, run `python app.py`).
@@ -357,8 +365,8 @@ Manual equivalent: `python -m venv .venv && . .venv/bin/activate && pip install 
   - Tests: `tests/conftest.py`, `tests/test_skeleton.py`, `tests/test_env_and_docs.py`,
     `tests/test_homepage.py`, `tests/test_catalog.py`, `tests/test_offer.py`,
     `tests/test_cart_page.py`, `tests/test_confirmation.py`,
-    `tests/test_styling_stub.py`, `tests/test_cart.py`, `tests/test_routes.py` — **281 passing**.
-- **Not implemented yet (still to do in Pass 2):** `M8 -- real` (styling; re-queued for implementation).
+    `tests/test_styling.py`, `tests/test_cart.py`, `tests/test_routes.py` — **284 passing**.
+- **Not implemented yet (still to do in Pass 2):** None — every Pass 2 milestone is delivered.
 
 Pass 1 rule: implement every milestone as a stub so the whole app runs end-to-end before Pass 2 replaces
 each stub with the real implementation described in this document.
